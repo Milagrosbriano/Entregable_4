@@ -1,0 +1,48 @@
+
+Report Summary
+
+┌──────────────────────────────────────────┬────────┬─────────────────┐
+│                  Target                  │  Type  │ Vulnerabilities │
+├──────────────────────────────────────────┼────────┼─────────────────┤
+│ /work/scans/frontend.tar (alpine 3.23.3) │ alpine │        7        │
+└──────────────────────────────────────────┴────────┴─────────────────┘
+Legend:
+- '-': Not scanned
+- '0': Clean (no security findings detected)
+
+
+/work/scans/frontend.tar (alpine 3.23.3)
+========================================
+Total: 7 (UNKNOWN: 0, LOW: 0, MEDIUM: 2, HIGH: 5, CRITICAL: 0)
+
+┌─────────┬────────────────┬──────────┬────────┬───────────────────┬───────────────┬──────────────────────────────────────────────────────────────┐
+│ Library │ Vulnerability  │ Severity │ Status │ Installed Version │ Fixed Version │                            Title                             │
+├─────────┼────────────────┼──────────┼────────┼───────────────────┼───────────────┼──────────────────────────────────────────────────────────────┤
+│ nginx   │ CVE-2026-42055 │ HIGH     │ fixed  │ 1.28.3-r1         │ 1.28.3-r4     │ nginx: NGINX: Arbitrary code execution or Denial of Service  │
+│         │                │          │        │                   │               │ via heap-based buffer...                                     │
+│         │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-42055                   │
+│         ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│         │ CVE-2026-42533 │          │        │                   │ 1.28.3-r6     │ nginx: NGINX: Arbitrary code execution via crafted HTTP      │
+│         │                │          │        │                   │               │ requests                                                     │
+│         │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-42533                   │
+│         ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│         │ CVE-2026-49975 │          │        │                   │ 1.28.3-r3     │ httpd: httpd: HTTP/2 Remote Denial of Service via            │
+│         │                │          │        │                   │               │ compression bomb and Slowloris-style...                      │
+│         │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-49975                   │
+│         ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│         │ CVE-2026-60005 │          │        │                   │ 1.28.3-r6     │ nginx: NGINX: Memory disclosure and denial of service in     │
+│         │                │          │        │                   │               │ ngx_http_slice_module                                        │
+│         │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-60005                   │
+│         ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│         │ CVE-2026-9256  │          │        │                   │ 1.28.3-r2     │ nginx: ngx_http_rewrite_module: code execution and denial of │
+│         │                │          │        │                   │               │ service                                                      │
+│         │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-9256                    │
+│         ├────────────────┼──────────┤        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│         │ CVE-2026-48142 │ MEDIUM   │        │                   │ 1.28.3-r4     │ nginx: NGINX: Memory disclosure or denial of service via     │
+│         │                │          │        │                   │               │ ngx_http_charset_module heap buffer...                       │
+│         │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-48142                   │
+│         ├────────────────┤          │        │                   ├───────────────┼──────────────────────────────────────────────────────────────┤
+│         │ CVE-2026-56434 │          │        │                   │ 1.28.3-r6     │ nginx: NGINX: Heap buffer over-read allows memory            │
+│         │                │          │        │                   │               │ modification or denial of service...                         │
+│         │                │          │        │                   │               │ https://avd.aquasec.com/nvd/cve-2026-56434                   │
+└─────────┴────────────────┴──────────┴────────┴───────────────────┴───────────────┴──────────────────────────────────────────────────────────────┘
