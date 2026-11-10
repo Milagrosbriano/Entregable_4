@@ -1,0 +1,1 @@
+Los informes se conservan sin modificaciones como antecedentes de los entregables 1 y 2. Describen la arquitectura anterior. Los comandos vigentes para esta separación están en el README del proyecto.

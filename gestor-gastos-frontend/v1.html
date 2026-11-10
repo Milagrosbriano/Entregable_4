@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestor de Gastos</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="wrap">
+    <h1>Gestor de Gastos</h1>
+    <p class="sub">v1 — carga manual</p>
+
+    <div class="card">
+      <form id="form">
+        <div>
+          <label for="descripcion">Descripción</label>
+          <input id="descripcion" required placeholder="Ej: Almuerzo">
+        </div>
+        <div>
+          <label for="monto">Monto</label>
+          <input id="monto" type="number" step="0.01" min="0" required placeholder="0.00">
+        </div>
+        <div>
+          <label for="categoria">Categoría</label>
+          <select id="categoria"></select>
+        </div>
+        <p id="status" role="status" aria-live="polite"></p>
+        <button type="submit">Agregar gasto</button>
+      </form>
+    </div>
+
+    <div class="card">
+      <div class="total">Total: $<span id="total">0.00</span></div>
+      <table>
+        <thead>
+          <tr><th>Descripción</th><th>Categoría</th><th>Monto</th></tr>
+        </thead>
+        <tbody id="tbody"></tbody>
+      </table>
+      <div id="empty" class="empty">Todavía no hay gastos cargados.</div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

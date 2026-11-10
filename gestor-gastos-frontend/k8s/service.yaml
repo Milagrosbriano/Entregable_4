@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: gestor-gastos-frontend
+spec:
+  type: NodePort
+  selector:
+    app: gestor-gastos-frontend
+  ports:
+    - port: 8080
+      targetPort: 8080
