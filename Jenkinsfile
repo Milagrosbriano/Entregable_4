@@ -28,6 +28,13 @@ pipeline {
                 sh 'docker build --progress=plain -f ./gestor-gastos-backend/Dockerfile.test -t gestor-gastos-tests .'
             }
         }
+        stage('Semgrep') {
+            steps {
+                echo 'Analizando el codigo con Semgrep...'
+
+                sh 'docker build --progress=plain -f Dockerfile.semgrep -t gestor-gastos-semgrep .'
+            }
+        }
         stage('Verificar Docker') {
             steps {
                 echo 'Comprobando la conexión con Docker...'
