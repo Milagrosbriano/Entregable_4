@@ -47,12 +47,17 @@ pipeline {
                 ]) {
                     sh '''
                         set +x
-                        docker run --rm \
+                        set -eu
+
+                        tar -C gestor-gastos-backend -cf - requirements.txt | \
+                        docker run --rm -i \
                             -e SNYK_TOKEN \
-                            -v "$PWD/gestor-gastos-backend:/app" \
-                            -w /app \
+                            --entrypoint /bin/sh \
                             snyk/snyk:python \
-                            snyk test --severity-threshold=critical
+                            -c 'mkdir -p /app &&
+                                tar -xf - -C /app &&
+                                cd /app &&
+                                snyk test --file=requirements.txt --severity-threshold=critical'
                     '''
                 }
             }
