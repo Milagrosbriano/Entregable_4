@@ -35,6 +35,28 @@ pipeline {
                 sh 'docker build --progress=plain -f Dockerfile.semgrep -t gestor-gastos-semgrep .'
             }
         }
+        stage('Snyk') {
+            steps {
+                echo 'Analizando dependencias del backend con Snyk...'
+
+                withCredentials([
+                    string(
+                        credentialsId: 'snyk-token',
+                        variable: 'SNYK_TOKEN'
+                    )
+                ]) {
+                    sh '''
+                        set +x
+                        docker run --rm \
+                            -e SNYK_TOKEN \
+                            -v "$PWD/gestor-gastos-backend:/app" \
+                            -w /app \
+                            snyk/snyk:python \
+                            snyk test --severity-threshold=critical
+                    '''
+                }
+            }
+        }
         stage('Verificar Docker') {
             steps {
                 echo 'Comprobando la conexión con Docker...'
