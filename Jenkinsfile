@@ -34,7 +34,19 @@ pipeline {
                 sh 'docker version'
             }
         }
+        stage('Build Docker') {
+            steps {
+                echo 'Construyendo imagen Docker del backend...'
+                sh 'docker build -t gestor-gastos-backend:ci-${BUILD_NUMBER} ./gestor-gastos-backend'
 
+                echo 'Construyendo imagen Docker del frontend...'
+                sh 'docker build -t gestor-gastos-frontend:ci-${BUILD_NUMBER} ./gestor-gastos-frontend'
+
+                echo 'Verificando las imagenes construidas...'
+                sh 'docker image inspect gestor-gastos-backend:ci-${BUILD_NUMBER} > /dev/null'
+                sh 'docker image inspect gestor-gastos-frontend:ci-${BUILD_NUMBER} > /dev/null'
+            }
+        }
         stage('Verificar Kubernetes') {
             steps {
                 echo 'Comprobando el acceso a Minikube...'
