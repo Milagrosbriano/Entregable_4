@@ -95,6 +95,44 @@ pipeline {
                 }
             }
         }
+        stage('Deploy Helm') {
+            steps {
+                echo 'Desplegando las nuevas imagenes en Minikube...'
+
+                withCredentials([
+                    file(
+                        credentialsId: 'gastos-helm-kubeconfig',
+                        variable: 'KUBECONFIG'
+                    ),
+                    usernamePassword(
+                        credentialsId: 'dockerhub-jenkins',
+                        usernameVariable: 'DOCKERHUB_USER',
+                        passwordVariable: 'DOCKERHUB_TOKEN'
+                    )
+                ]) {
+                    sh '''
+                        set -eu
+
+                        helm upgrade --install gastos ./helm-chart \
+                            --namespace gastos-helm \
+                            -f ./helm-chart/values-dev.yaml \
+                            --set-string backend.image.repository="$DOCKERHUB_USER/gestor-gastos-backend" \
+                            --set-string backend.image.tag="ci-$BUILD_NUMBER" \
+                            --set backend.image.pullPolicy=IfNotPresent \
+                            --set-string frontend.image.repository="$DOCKERHUB_USER/gestor-gastos-frontend" \
+                            --set-string frontend.image.tag="ci-$BUILD_NUMBER" \
+                            --set frontend.image.pullPolicy=IfNotPresent \
+                            --wait \
+                            --timeout 5m
+
+                        kubectl rollout status deployment/gestor-gastos-backend -n gastos-helm --timeout=180s
+                        kubectl rollout status deployment/gestor-gastos-frontend -n gastos-helm --timeout=180s
+
+                        kubectl get pods -n gastos-helm
+                    '''
+                }
+            }
+        }
     }
 
     post {
