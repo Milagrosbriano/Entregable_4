@@ -1,0 +1,27 @@
+rules:
+  - id: python-sqlite-sql-injection
+    languages: [python]
+    severity: ERROR
+    message: >-
+      Consulta SQL armada con concatenacion, f-string o format. Usar parametros (?)
+      para evitar SQL injection.
+    metadata:
+      cwe: "CWE-89: SQL Injection"
+    pattern-either:
+      - pattern: $CON.execute(f"...", ...)
+      - pattern: $CON.execute("..." + $X, ...)
+      - pattern: $CON.execute("...".format(...), ...)
+      - pattern: $CON.execute("..." % $X, ...)
+
+  - id: js-innerhtml-con-datos-dinamicos
+    languages: [javascript]
+    severity: ERROR
+    message: >-
+      Se asigna a innerHTML un template con datos interpolados. Si esos datos vienen
+      de la API (por ejemplo la descripcion de un gasto) se puede inyectar HTML o
+      JavaScript (XSS). Usar textContent o escapar los valores.
+    metadata:
+      cwe: "CWE-79: Cross-site Scripting"
+    patterns:
+      - pattern: $EL.innerHTML = $VAL
+      - pattern-not: $EL.innerHTML = "..."

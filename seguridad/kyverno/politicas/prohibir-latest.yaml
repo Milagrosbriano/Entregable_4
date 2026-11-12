@@ -1,0 +1,24 @@
+apiVersion: kyverno.io/v1
+kind: ClusterPolicy
+metadata:
+  name: prohibir-latest
+spec:
+  background: true
+  rules:
+    - name: validar-etiqueta-imagen
+      match:
+        any:
+          - resources:
+              kinds:
+                - Pod
+              namespaces:
+                - gestor-gastos
+      validate:
+        failureAction: Enforce
+        message: "La imagen debe tener una etiqueta explicita distinta de latest."
+        pattern:
+          spec:
+            containers:
+              - image: "?*:* & !*:latest"
+            "=(initContainers)":
+              - image: "?*:* & !*:latest"
