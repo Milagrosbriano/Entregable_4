@@ -47,6 +47,40 @@ pipeline {
                 sh 'docker image inspect gestor-gastos-frontend:ci-${BUILD_NUMBER} > /dev/null'
             }
         }
+        stage('Push Docker') {
+            steps {
+                echo 'Publicando imagenes en Docker Hub...'
+
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'dockerhub-jenkins',
+                        usernameVariable: 'DOCKERHUB_USER',
+                        passwordVariable: 'DOCKERHUB_TOKEN'
+                    )
+                ]) {
+                    sh '''
+                        set +x
+                        set -eu
+
+                        export DOCKER_CONFIG="$(mktemp -d)"
+                        trap 'rm -rf "$DOCKER_CONFIG"' EXIT
+
+                        printf '%s' "$DOCKERHUB_TOKEN" | docker login \
+                            --username "$DOCKERHUB_USER" \
+                            --password-stdin
+
+                        docker tag gestor-gastos-backend:ci-${BUILD_NUMBER} \
+                            "$DOCKERHUB_USER/gestor-gastos-backend:ci-${BUILD_NUMBER}"
+
+                        docker tag gestor-gastos-frontend:ci-${BUILD_NUMBER} \
+                            "$DOCKERHUB_USER/gestor-gastos-frontend:ci-${BUILD_NUMBER}"
+
+                        docker push "$DOCKERHUB_USER/gestor-gastos-backend:ci-${BUILD_NUMBER}"
+                        docker push "$DOCKERHUB_USER/gestor-gastos-frontend:ci-${BUILD_NUMBER}"
+                    '''
+                }
+            }
+        }
         stage('Verificar Kubernetes') {
             steps {
                 echo 'Comprobando el acceso a Minikube...'
