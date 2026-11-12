@@ -22,7 +22,12 @@ pipeline {
                 sh 'helm template gastos ./helm-chart -f ./helm-chart/values-dev.yaml > /dev/null'
             }
         }
-	
+        stage('Tests') {
+            steps {
+                echo 'Ejecutando pruebas automaticas del backend...'
+                sh 'docker build --progress=plain -f ./gestor-gastos-backend/Dockerfile.test -t gestor-gastos-tests .'
+            }
+        }
         stage('Verificar Docker') {
             steps {
                 echo 'Comprobando la conexión con Docker...'
