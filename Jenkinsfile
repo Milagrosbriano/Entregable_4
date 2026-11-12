@@ -35,7 +35,7 @@ pipeline {
                 sh 'docker build --progress=plain -f Dockerfile.semgrep -t gestor-gastos-semgrep .'
             }
         }
-        stage('Snyk') {
+                stage('Snyk') {
             steps {
                 echo 'Analizando dependencias del backend con Snyk...'
 
@@ -54,10 +54,18 @@ pipeline {
                             -e SNYK_TOKEN \
                             --entrypoint /bin/sh \
                             snyk/snyk:python \
-                            -c 'mkdir -p /app &&
-                                tar -xf - -C /app &&
-                                cd /app &&
-                                snyk test --file=requirements.txt --severity-threshold=critical'
+                            -c '
+                                set -eu
+                                mkdir -p /app
+                                tar -xf - -C /app
+                                cd /app
+
+                                python3 -m venv /tmp/snyk-venv
+                                /tmp/snyk-venv/bin/pip install --no-cache-dir -r requirements.txt
+
+                                export PATH="/tmp/snyk-venv/bin:$PATH"
+                                snyk test --file=requirements.txt --severity-threshold=critical --command=python
+                            '
                     '''
                 }
             }
