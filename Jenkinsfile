@@ -22,7 +22,7 @@ pipeline {
                 sh 'helm template gastos ./helm-chart -f ./helm-chart/values-dev.yaml > /dev/null'
             }
         }
-
+	
         stage('Verificar Docker') {
             steps {
                 echo 'Comprobando la conexión con Docker...'
