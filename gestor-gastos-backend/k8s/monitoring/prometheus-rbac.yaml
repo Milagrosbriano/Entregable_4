@@ -2,13 +2,13 @@ apiVersion: v1
 kind: ServiceAccount
 metadata:
   name: prometheus
-  namespace: default
+  namespace: monitoring
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
 metadata:
   name: prometheus
-  namespace: default
+  namespace: gestor-gastos
 rules:
   - apiGroups: [""]
     resources: ["pods", "services", "endpoints"]
@@ -18,7 +18,7 @@ apiVersion: rbac.authorization.k8s.io/v1
 kind: RoleBinding
 metadata:
   name: prometheus
-  namespace: default
+  namespace: gestor-gastos
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: Role
@@ -26,4 +26,27 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: prometheus
-    namespace: default
+    namespace: monitoring
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: prometheus-cadvisor
+rules:
+  - apiGroups: [""]
+    resources: ["nodes/proxy"]
+    resourceNames: ["minikube"]
+    verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: prometheus-cadvisor
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prometheus-cadvisor
+subjects:
+  - kind: ServiceAccount
+    name: prometheus
+    namespace: monitoring

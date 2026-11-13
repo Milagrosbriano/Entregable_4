@@ -1,8 +1,8 @@
-apiVersion: v1
+﻿apiVersion: v1
 kind: ConfigMap
 metadata:
   name: prometheus-config
-  namespace: default
+  namespace: monitoring
 data:
   prometheus.yml: |
     global:
@@ -16,7 +16,7 @@ data:
         kubernetes_sd_configs:
           - role: pod
             namespaces:
-              names: [default]
+              names: [gestor-gastos]
         relabel_configs:
           - source_labels: [__meta_kubernetes_pod_label_app]
             action: keep
@@ -28,6 +28,14 @@ data:
           - source_labels: [__meta_kubernetes_pod_ip]
             target_label: __address__
             replacement: "${1}:8000"
+      - job_name: kubernetes-cadvisor
+        scheme: https
+        metrics_path: /api/v1/nodes/minikube/proxy/metrics/cadvisor
+        static_configs:
+          - targets: ["kubernetes.default.svc:443"]
+        bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
+        tls_config:
+          ca_file: /var/run/secrets/kubernetes.io/serviceaccount/ca.crt
       - job_name: prometheus
         static_configs:
           - targets: ["localhost:9090"]
