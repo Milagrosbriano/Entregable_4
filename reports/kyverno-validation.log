@@ -1,0 +1,14 @@
+NAME                           AGE   READY
+exigir-recursos                12m   true
+impedir-escalada-privilegios   12m   true
+impedir-root                   12m   true
+prohibir-latest                12m   true
+Error from server: error when creating "seguridad\\kyverno\\pruebas\\prueba-latest.yaml": admission webhook "vpol.validate.kyverno.svc-fail" denied the request: Policy prohibir-latest failed: La imagen debe tener una etiqueta explicita distinta de latest.
+Error from server: error when creating "seguridad\\kyverno\\pruebas\\prueba-sin-recursos.yaml": admission webhook "vpol.validate.kyverno.svc-fail" denied the request: Policy exigir-recursos failed: Cada contenedor debe definir requests y limits de CPU y memoria.
+Error from server: error when creating "seguridad\\kyverno\\pruebas\\prueba-root.yaml": admission webhook "vpol.validate.kyverno.svc-fail" denied the request: Policy impedir-root failed: Cada contenedor debe declarar runAsNonRoot true y runAsUser mayor a cero.
+Error from server: error when creating "seguridad\\kyverno\\pruebas\\prueba-escalada.yaml": admission webhook "vpol.validate.kyverno.svc-fail" denied the request: Policy impedir-escalada-privilegios failed: Cada contenedor debe declarar allowPrivilegeEscalation false.
+pod/prueba-valida created
+NAME                                      READY   STATUS    RESTARTS   AGE
+gestor-gastos-backend-6975d7464c-hzxjh    1/1     Running   0          7m40s
+gestor-gastos-frontend-7d8889d699-kvqsc   1/1     Running   0          7m1s
+prueba-valida                             1/1     Running   0          119s

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: prueba-sin-recursos
+  namespace: gestor-gastos
+spec:
+  containers:
+    - name: backend
+      image: gestor-gastos-backend:v1
+      imagePullPolicy: Never
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        allowPrivilegeEscalation: false
