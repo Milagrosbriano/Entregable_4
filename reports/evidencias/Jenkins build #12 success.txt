@@ -1,0 +1,830 @@
+Started by user María Noel Prieto
+Obtained Jenkinsfile from git https://github.com/Milagrosbriano/Entregable_4.git
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/gestor-gastos-lab4
+[Pipeline] {
+[Pipeline] timestamps
+[Pipeline] {
+[Pipeline] stage
+[Pipeline] { (Checkout)
+[Pipeline] echo
+[2026-11-13T14:54:32.831Z] Descargando el proyecto desde GitHub...
+[Pipeline] checkout
+[2026-11-13T14:54:32.914Z] The recommended git tool is: git
+[2026-11-13T14:54:32.914Z] No credentials specified
+[2026-11-13T14:54:32.917Z]  > git rev-parse --resolve-git-dir /var/jenkins_home/workspace/gestor-gastos-lab4/.git # timeout=10
+[2026-11-13T14:54:32.921Z] Fetching changes from the remote Git repository
+[2026-11-13T14:54:32.923Z]  > git config remote.origin.url https://github.com/Milagrosbriano/Entregable_4.git # timeout=10
+[2026-11-13T14:54:32.928Z] Fetching upstream changes from https://github.com/Milagrosbriano/Entregable_4.git
+[2026-11-13T14:54:32.928Z]  > git --version # timeout=10
+[2026-11-13T14:54:32.932Z]  > git --version # 'git version 2.47.3'
+[2026-11-13T14:54:32.932Z]  > git fetch --tags --force --progress -- https://github.com/Milagrosbriano/Entregable_4.git +refs/heads/*:refs/remotes/origin/* # timeout=10
+[2026-11-13T14:54:33.844Z]  > git rev-parse refs/remotes/origin/lab4-helm-jenkins^{commit} # timeout=10
+[2026-11-13T14:54:33.850Z] Checking out Revision 1ea5a12fae97e5dc904c77acda19319afb09dd36 (refs/remotes/origin/lab4-helm-jenkins)
+[2026-11-13T14:54:33.852Z]  > git config core.sparsecheckout # timeout=10
+[2026-11-13T14:54:33.858Z]  > git checkout -f 1ea5a12fae97e5dc904c77acda19319afb09dd36 # timeout=10
+[2026-11-13T14:54:33.874Z] Commit message: "Configurar Jenkins para desplegar en gestor-gastos y agregar evidencia de Kyverno"
+[2026-11-13T14:54:33.877Z]  > git rev-list --no-walk a25fa439fb4063ae161273aca1d47eea4aeb6f12 # timeout=10
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Validar Helm)
+[Pipeline] echo
+[2026-11-13T14:54:34.082Z] Validando la Helm Chart...
+[Pipeline] sh
+[2026-11-13T14:54:34.386Z] + helm lint ./helm-chart -f ./helm-chart/values-dev.yaml
+[2026-11-13T14:54:34.386Z] ==> Linting ./helm-chart
+[2026-11-13T14:54:34.387Z] [INFO] Chart.yaml: icon is recommended
+[2026-11-13T14:54:34.387Z] 
+[2026-11-13T14:54:34.387Z] 1 chart(s) linted, 0 chart(s) failed
+[Pipeline] sh
+[2026-11-13T14:54:34.678Z] + helm template gastos ./helm-chart -f ./helm-chart/values-dev.yaml
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Tests)
+[Pipeline] echo
+[2026-11-13T14:54:34.836Z] Ejecutando pruebas automaticas del backend...
+[Pipeline] sh
+[2026-11-13T14:54:35.114Z] + docker build --progress=plain -f ./gestor-gastos-backend/Dockerfile.test -t gestor-gastos-tests .
+[2026-11-13T14:54:35.666Z] #0 building with "default" instance using docker driver
+[2026-11-13T14:54:35.666Z] 
+[2026-11-13T14:54:35.666Z] #1 [internal] load build definition from Dockerfile.test
+[2026-11-13T14:54:35.666Z] #1 transferring dockerfile: 312B done
+[2026-11-13T14:54:35.666Z] #1 DONE 0.0s
+[2026-11-13T14:54:35.666Z] 
+[2026-11-13T14:54:35.666Z] #2 [internal] load metadata for docker.io/library/python:3.12-slim
+[2026-11-13T14:54:35.666Z] #2 DONE 0.0s
+[2026-11-13T14:54:35.666Z] 
+[2026-11-13T14:54:35.666Z] #3 [internal] load .dockerignore
+[2026-11-13T14:54:35.666Z] #3 transferring context: 2B done
+[2026-11-13T14:54:35.666Z] #3 DONE 0.0s
+[2026-11-13T14:54:35.666Z] 
+[2026-11-13T14:54:35.666Z] #4 [1/7] FROM docker.io/library/python:3.12-slim
+[2026-11-13T14:54:35.666Z] #4 DONE 0.0s
+[2026-11-13T14:54:35.666Z] 
+[2026-11-13T14:54:35.666Z] #5 [internal] load build context
+[2026-11-13T14:54:35.666Z] #5 transferring context: 367B done
+[2026-11-13T14:54:35.666Z] #5 DONE 0.0s
+[2026-11-13T14:54:35.666Z] 
+[2026-11-13T14:54:35.666Z] #6 [2/7] WORKDIR /app
+[2026-11-13T14:54:35.666Z] #6 CACHED
+[2026-11-13T14:54:35.917Z] 
+[2026-11-13T14:54:35.918Z] #7 [3/7] COPY gestor-gastos-backend/requirements.txt .
+[2026-11-13T14:54:35.918Z] #7 DONE 0.1s
+[2026-11-13T14:54:35.918Z] 
+[2026-11-13T14:54:35.918Z] #8 [4/7] RUN pip install --no-cache-dir -r requirements.txt pytest==8.3.5 httpx==0.27.2
+[2026-11-13T14:54:38.402Z] #8 2.277 Collecting pytest==8.3.5
+[2026-11-13T14:54:38.402Z] #8 2.389   Downloading pytest-8.3.5-py3-none-any.whl.metadata (7.6 kB)
+[2026-11-13T14:54:38.402Z] #8 2.430 Collecting httpx==0.27.2
+[2026-11-13T14:54:38.402Z] #8 2.456   Downloading httpx-0.27.2-py3-none-any.whl.metadata (7.1 kB)
+[2026-11-13T14:54:38.402Z] #8 2.556 Collecting fastapi==0.162.4 (from -r requirements.txt (line 1))
+[2026-11-13T14:54:38.402Z] #8 2.580   Downloading fastapi-0.162.4-py3-none-any.whl.metadata (27 kB)
+[2026-11-13T14:54:38.402Z] #8 2.641 Collecting starlette==1.10.0 (from -r requirements.txt (line 2))
+[2026-11-13T14:54:38.402Z] #8 2.663   Downloading starlette-1.10.0-py3-none-any.whl.metadata (6.6 kB)
+[2026-11-13T14:54:38.402Z] #8 2.708 Collecting uvicorn==0.30.6 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:54:38.402Z] #8 2.731   Downloading uvicorn-0.30.6-py3-none-any.whl.metadata (6.6 kB)
+[2026-11-13T14:54:38.402Z] #8 2.765 Collecting prometheus-fastapi-instrumentator==8.1.0 (from -r requirements.txt (line 4))
+[2026-11-13T14:54:38.402Z] #8 2.788   Downloading prometheus_fastapi_instrumentator-8.1.0-py3-none-any.whl.metadata (13 kB)
+[2026-11-13T14:54:38.402Z] #8 2.815 Collecting iniconfig (from pytest==8.3.5)
+[2026-11-13T14:54:38.402Z] #8 2.836   Downloading iniconfig-2.3.1-py3-none-any.whl.metadata (2.8 kB)
+[2026-11-13T14:54:38.402Z] #8 2.867 Collecting packaging (from pytest==8.3.5)
+[2026-11-13T14:54:38.653Z] #8 2.888   Downloading packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+[2026-11-13T14:54:38.654Z] #8 2.916 Collecting pluggy<2,>=1.5 (from pytest==8.3.5)
+[2026-11-13T14:54:38.654Z] #8 2.937   Downloading pluggy-1.7.0-py3-none-any.whl.metadata (5.0 kB)
+[2026-11-13T14:54:38.654Z] #8 2.985 Collecting anyio (from httpx==0.27.2)
+[2026-11-13T14:54:38.654Z] #8 3.115   Downloading anyio-4.16.0-py3-none-any.whl.metadata (4.7 kB)
+[2026-11-13T14:54:38.904Z] #8 3.166 Collecting certifi (from httpx==0.27.2)
+[2026-11-13T14:54:38.904Z] #8 3.187   Downloading certifi-2026.10.23-py3-none-any.whl.metadata (2.5 kB)
+[2026-11-13T14:54:38.904Z] #8 3.224 Collecting httpcore==1.* (from httpx==0.27.2)
+[2026-11-13T14:54:38.904Z] #8 3.246   Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+[2026-11-13T14:54:38.905Z] #8 3.283 Collecting idna (from httpx==0.27.2)
+[2026-11-13T14:54:38.905Z] #8 3.303   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+[2026-11-13T14:54:38.905Z] #8 3.328 Collecting sniffio (from httpx==0.27.2)
+[2026-11-13T14:54:39.156Z] #8 3.348   Downloading sniffio-1.3.1-py3-none-any.whl.metadata (3.9 kB)
+[2026-11-13T14:54:39.156Z] #8 3.532 Collecting pydantic>=2.9.0 (from fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:54:39.407Z] #8 3.552   Downloading pydantic-2.14.3-py3-none-any.whl.metadata (141 kB)
+[2026-11-13T14:54:39.407Z] #8 3.626 Collecting typing-extensions>=4.8.0 (from fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:54:39.407Z] #8 3.648   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+[2026-11-13T14:54:39.407Z] #8 3.673 Collecting typing-inspection>=0.4.2 (from fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:54:39.407Z] #8 3.694   Downloading typing_inspection-0.4.5-py3-none-any.whl.metadata (2.6 kB)
+[2026-11-13T14:54:39.407Z] #8 3.718 Collecting annotated-doc>=0.0.2 (from fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:54:39.407Z] #8 3.740   Downloading annotated_doc-0.0.6-py3-none-any.whl.metadata (6.5 kB)
+[2026-11-13T14:54:39.407Z] #8 3.778 Collecting opentelemetry-api>=1.44.0 (from fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:54:39.658Z] #8 3.800   Downloading opentelemetry_api-1.45.2-py3-none-any.whl.metadata (1.4 kB)
+[2026-11-13T14:54:39.659Z] #8 3.850 Collecting click>=7.0 (from uvicorn==0.30.6->uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:54:39.659Z] #8 3.872   Downloading click-8.5.1-py3-none-any.whl.metadata (2.6 kB)
+[2026-11-13T14:54:39.659Z] #8 3.899 Collecting h11>=0.8 (from uvicorn==0.30.6->uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:54:39.659Z] #8 3.919   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+[2026-11-13T14:54:39.659Z] #8 3.957 Collecting prometheus-client<1.0.0,>=0.8.0 (from prometheus-fastapi-instrumentator==8.1.0->-r requirements.txt (line 4))
+[2026-11-13T14:54:39.659Z] #8 3.979   Downloading prometheus_client-0.26.0-py3-none-any.whl.metadata (2.1 kB)
+[2026-11-13T14:54:39.659Z] #8 4.054 Collecting httptools>=0.5.0 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:54:39.910Z] #8 4.075   Downloading httptools-0.9.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (3.5 kB)
+[2026-11-13T14:54:39.910Z] #8 4.109 Collecting python-dotenv>=0.13 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:54:39.910Z] #8 4.131   Downloading python_dotenv-1.2.4-py3-none-any.whl.metadata (29 kB)
+[2026-11-13T14:54:39.910Z] #8 4.192 Collecting pyyaml>=5.1 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:54:39.910Z] #8 4.213   Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+[2026-11-13T14:54:39.910Z] #8 4.282 Collecting uvloop!=0.15.0,!=0.15.1,>=0.14.0 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:54:39.910Z] #8 4.303   Downloading uvloop-0.23.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (5.1 kB)
+[2026-11-13T14:54:40.161Z] #8 4.408 Collecting watchfiles>=0.13 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:54:40.161Z] #8 4.429   Downloading watchfiles-1.3.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+[2026-11-13T14:54:40.161Z] #8 4.601 Collecting websockets>=10.4 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:54:40.412Z] #8 4.621   Downloading websockets-17.4-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.3 kB)
+[2026-11-13T14:54:40.412Z] #8 4.667 Collecting annotated-types>=0.6.0 (from pydantic>=2.9.0->fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:54:40.412Z] #8 4.687   Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+[2026-11-13T14:54:41.324Z] #8 5.516 Collecting pydantic-core==2.50.4 (from pydantic>=2.9.0->fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:54:41.325Z] #8 5.538   Downloading pydantic_core-2.50.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.6 kB)
+[2026-11-13T14:54:41.325Z] #8 5.593 Downloading pytest-8.3.5-py3-none-any.whl (343 kB)
+[2026-11-13T14:54:41.325Z] #8 5.639 Downloading httpx-0.27.2-py3-none-any.whl (76 kB)
+[2026-11-13T14:54:41.325Z] #8 5.666 Downloading fastapi-0.162.4-py3-none-any.whl (151 kB)
+[2026-11-13T14:54:41.325Z] #8 5.697 Downloading starlette-1.10.0-py3-none-any.whl (80 kB)
+[2026-11-13T14:54:41.325Z] #8 5.722 Downloading uvicorn-0.30.6-py3-none-any.whl (62 kB)
+[2026-11-13T14:54:41.325Z] #8 5.749 Downloading prometheus_fastapi_instrumentator-8.1.0-py3-none-any.whl (19 kB)
+[2026-11-13T14:54:41.576Z] #8 5.771 Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+[2026-11-13T14:54:41.576Z] #8 5.795 Downloading annotated_doc-0.0.6-py3-none-any.whl (5.3 kB)
+[2026-11-13T14:54:41.576Z] #8 5.815 Downloading anyio-4.16.0-py3-none-any.whl (134 kB)
+[2026-11-13T14:54:41.576Z] #8 5.845 Downloading click-8.5.1-py3-none-any.whl (126 kB)
+[2026-11-13T14:54:41.576Z] #8 5.871 Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+[2026-11-13T14:54:41.576Z] #8 5.894 Downloading httptools-0.9.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (552 kB)
+[2026-11-13T14:54:41.576Z] #8 5.934    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 552.8/552.8 kB 11.6 MB/s eta 0:00:00
+[2026-11-13T14:54:41.576Z] #8 5.956 Downloading idna-3.20-py3-none-any.whl (69 kB)
+[2026-11-13T14:54:41.576Z] #8 5.980 Downloading opentelemetry_api-1.45.2-py3-none-any.whl (60 kB)
+[2026-11-13T14:54:41.827Z] #8 6.006 Downloading pluggy-1.7.0-py3-none-any.whl (27 kB)
+[2026-11-13T14:54:41.827Z] #8 6.028 Downloading prometheus_client-0.26.0-py3-none-any.whl (64 kB)
+[2026-11-13T14:54:41.827Z] #8 6.050 Downloading pydantic-2.14.3-py3-none-any.whl (494 kB)
+[2026-11-13T14:54:41.827Z] #8 6.097 Downloading pydantic_core-2.50.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (2.3 MB)
+[2026-11-13T14:54:42.078Z] #8 6.236    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 MB 16.8 MB/s eta 0:00:00
+[2026-11-13T14:54:42.078Z] #8 6.258 Downloading python_dotenv-1.2.4-py3-none-any.whl (23 kB)
+[2026-11-13T14:54:42.078Z] #8 6.282 Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (807 kB)
+[2026-11-13T14:54:42.328Z] #8 6.344    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 807.9/807.9 kB 11.7 MB/s eta 0:00:00
+[2026-11-13T14:54:42.328Z] #8 6.364 Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+[2026-11-13T14:54:42.328Z] #8 6.389 Downloading typing_inspection-0.4.5-py3-none-any.whl (14 kB)
+[2026-11-13T14:54:42.328Z] #8 6.413 Downloading uvloop-0.23.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (4.5 MB)
+[2026-11-13T14:54:42.328Z] #8 6.664    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 18.4 MB/s eta 0:00:00
+[2026-11-13T14:54:42.329Z] #8 6.685 Downloading watchfiles-1.3.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (458 kB)
+[2026-11-13T14:54:42.329Z] #8 6.728 Downloading websockets-17.4-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (226 kB)
+[2026-11-13T14:54:42.329Z] #8 6.761 Downloading certifi-2026.10.23-py3-none-any.whl (135 kB)
+[2026-11-13T14:54:42.329Z] #8 6.786 Downloading iniconfig-2.3.1-py3-none-any.whl (7.6 kB)
+[2026-11-13T14:54:42.579Z] #8 6.808 Downloading packaging-26.3-py3-none-any.whl (129 kB)
+[2026-11-13T14:54:42.580Z] #8 6.832 Downloading sniffio-1.3.1-py3-none-any.whl (10 kB)
+[2026-11-13T14:54:42.580Z] #8 6.852 Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+[2026-11-13T14:54:42.580Z] #8 6.963 Installing collected packages: websockets, uvloop, typing-extensions, sniffio, pyyaml, python-dotenv, prometheus-client, pluggy, packaging, iniconfig, idna, httptools, h11, click, certifi, annotated-types, annotated-doc, uvicorn, typing-inspection, pytest, pydantic-core, opentelemetry-api, httpcore, anyio, watchfiles, starlette, pydantic, httpx, prometheus-fastapi-instrumentator, fastapi
+[2026-11-13T14:54:45.064Z] #8 8.998 Successfully installed annotated-doc-0.0.6 annotated-types-0.8.0 anyio-4.16.0 certifi-2026.10.23 click-8.5.1 fastapi-0.162.4 h11-0.16.0 httpcore-1.0.9 httptools-0.9.0 httpx-0.27.2 idna-3.20 iniconfig-2.3.1 opentelemetry-api-1.45.2 packaging-26.3 pluggy-1.7.0 prometheus-client-0.26.0 prometheus-fastapi-instrumentator-8.1.0 pydantic-2.14.3 pydantic-core-2.50.4 pytest-8.3.5 python-dotenv-1.2.4 pyyaml-6.0.3 sniffio-1.3.1 starlette-1.10.0 typing-extensions-4.16.0 typing-inspection-0.4.5 uvicorn-0.30.6 uvloop-0.23.0 watchfiles-1.3.0 websockets-17.4
+[2026-11-13T14:54:45.064Z] #8 8.998 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[2026-11-13T14:54:45.064Z] #8 9.129 
+[2026-11-13T14:54:45.064Z] #8 9.129 [notice] A new release of pip is available: 25.0.1 -> 26.3
+[2026-11-13T14:54:45.064Z] #8 9.129 [notice] To update, run: pip install --upgrade pip
+[2026-11-13T14:54:45.064Z] #8 DONE 9.4s
+[2026-11-13T14:54:45.064Z] 
+[2026-11-13T14:54:45.064Z] #9 [5/7] COPY gestor-gastos-backend/main.py .
+[2026-11-13T14:54:45.064Z] #9 DONE 0.1s
+[2026-11-13T14:54:45.064Z] 
+[2026-11-13T14:54:45.064Z] #10 [6/7] COPY gestor-gastos-backend/tests/ ./tests/
+[2026-11-13T14:54:45.064Z] #10 DONE 0.1s
+[2026-11-13T14:54:45.315Z] 
+[2026-11-13T14:54:45.315Z] #11 [7/7] RUN python -m pytest -q
+[2026-11-13T14:54:46.910Z] #11 1.561 .                                                                        [100%]
+[2026-11-13T14:54:46.910Z] #11 1.565 =============================== warnings summary ===============================
+[2026-11-13T14:54:46.910Z] #11 1.565 ../usr/local/lib/python3.12/site-packages/fastapi/testclient.py:1
+[2026-11-13T14:54:46.910Z] #11 1.565   /usr/local/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+[2026-11-13T14:54:46.910Z] #11 1.565     from starlette.testclient import TestClient as TestClient  # noqa
+[2026-11-13T14:54:46.910Z] #11 1.565 
+[2026-11-13T14:54:46.910Z] #11 1.565 -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+[2026-11-13T14:54:46.910Z] #11 1.565 1 passed, 1 warning in 0.52s
+[2026-11-13T14:54:46.910Z] #11 DONE 1.7s
+[2026-11-13T14:54:47.160Z] 
+[2026-11-13T14:54:47.160Z] #12 exporting to image
+[2026-11-13T14:54:47.160Z] #12 exporting layers
+[2026-11-13T14:54:47.411Z] #12 exporting layers 0.5s done
+[2026-11-13T14:54:47.662Z] #12 writing image sha256:fb6536d2988bd760da3b11a3a63aa207af3fe1f0f81c43ace10433c9eaae1295 done
+[2026-11-13T14:54:47.662Z] #12 naming to docker.io/library/gestor-gastos-tests 0.0s done
+[2026-11-13T14:54:47.662Z] #12 DONE 0.6s
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Semgrep)
+[Pipeline] echo
+[2026-11-13T14:54:47.841Z] Analizando el codigo con Semgrep...
+[Pipeline] sh
+[2026-11-13T14:54:48.121Z] + docker build --progress=plain -f Dockerfile.semgrep -t gestor-gastos-semgrep .
+[2026-11-13T14:54:48.372Z] #0 building with "default" instance using docker driver
+[2026-11-13T14:54:48.372Z] 
+[2026-11-13T14:54:48.372Z] #1 [internal] load build definition from Dockerfile.semgrep
+[2026-11-13T14:54:48.372Z] #1 transferring dockerfile: 332B done
+[2026-11-13T14:54:48.372Z] #1 DONE 0.0s
+[2026-11-13T14:54:48.372Z] 
+[2026-11-13T14:54:48.372Z] #2 [internal] load metadata for docker.io/semgrep/semgrep:latest
+[2026-11-13T14:54:48.372Z] #2 DONE 0.0s
+[2026-11-13T14:54:48.372Z] 
+[2026-11-13T14:54:48.372Z] #3 [internal] load .dockerignore
+[2026-11-13T14:54:48.372Z] #3 transferring context: 2B done
+[2026-11-13T14:54:48.372Z] #3 DONE 0.0s
+[2026-11-13T14:54:48.372Z] 
+[2026-11-13T14:54:48.372Z] #4 [1/5] FROM docker.io/semgrep/semgrep:latest
+[2026-11-13T14:54:48.372Z] #4 DONE 0.0s
+[2026-11-13T14:54:48.372Z] 
+[2026-11-13T14:54:48.372Z] #5 [internal] load build context
+[2026-11-13T14:54:48.372Z] #5 transferring context: 1.02MB 0.1s done
+[2026-11-13T14:54:48.372Z] #5 DONE 0.1s
+[2026-11-13T14:54:48.372Z] 
+[2026-11-13T14:54:48.372Z] #6 [2/5] WORKDIR /src
+[2026-11-13T14:54:48.372Z] #6 CACHED
+[2026-11-13T14:54:48.372Z] 
+[2026-11-13T14:54:48.372Z] #7 [3/5] COPY gestor-gastos-backend/ ./gestor-gastos-backend/
+[2026-11-13T14:54:48.372Z] #7 DONE 0.1s
+[2026-11-13T14:54:48.372Z] 
+[2026-11-13T14:54:48.372Z] #8 [4/5] COPY gestor-gastos-frontend/ ./gestor-gastos-frontend/
+[2026-11-13T14:54:48.372Z] #8 DONE 0.0s
+[2026-11-13T14:54:48.623Z] 
+[2026-11-13T14:54:48.623Z] #9 [5/5] RUN semgrep scan     --config p/python     --config p/javascript     --error     gestor-gastos-backend gestor-gastos-frontend
+[2026-11-13T14:54:53.820Z] #9 4.926                
+[2026-11-13T14:54:53.820Z] #9 4.926                
+[2026-11-13T14:54:53.820Z] #9 4.926 ┌─────────────┐
+[2026-11-13T14:54:53.820Z] #9 4.926 │ Scan Status │
+[2026-11-13T14:54:53.820Z] #9 4.926 └─────────────┘
+[2026-11-13T14:54:53.820Z] #9 4.926   Scanning 37 files tracked by git with 225 Code rules:
+[2026-11-13T14:54:53.820Z] #9 4.933                                                                                                                         
+[2026-11-13T14:54:53.820Z] #9 4.933   Language   Rules   Files          Origin      Rules                                                                   
+[2026-11-13T14:54:53.820Z] #9 4.933  ──────────────────────────        ───────────────────                                                                  
+[2026-11-13T14:54:53.820Z] #9 4.933   js            68       3          Community     225                                                                   
+[2026-11-13T14:54:53.820Z] #9 4.933   python       151       1                                                                                              
+[2026-11-13T14:54:53.820Z] #9 4.933                                                                                                                         
+[2026-11-13T14:54:54.071Z] #9 5.539                 
+[2026-11-13T14:54:54.071Z] #9 5.539                 
+[2026-11-13T14:54:54.071Z] #9 5.539 ┌──────────────┐
+[2026-11-13T14:54:54.071Z] #9 5.539 │ Scan Summary │
+[2026-11-13T14:54:54.071Z] #9 5.539 └──────────────┘
+[2026-11-13T14:54:54.071Z] #9 5.539 ✅ Scan completed successfully.
+[2026-11-13T14:54:54.071Z] #9 5.539  • Findings: 0 (0 blocking)
+[2026-11-13T14:54:54.071Z] #9 5.539  • Rules run: 219
+[2026-11-13T14:54:54.071Z] #9 5.539  • Targets scanned: 4
+[2026-11-13T14:54:54.071Z] #9 5.539  • Parsed lines: ~100.0%
+[2026-11-13T14:54:54.071Z] #9 5.539  • Scan skipped: 
+[2026-11-13T14:54:54.071Z] #9 5.539    ◦ Files matching .semgrepignore patterns: 1
+[2026-11-13T14:54:54.071Z] #9 5.539  • For a detailed list of skipped files and lines, run semgrep with the --verbose flag
+[2026-11-13T14:54:54.071Z] #9 5.539 Ran 219 rules on 4 files: 0 findings.
+[2026-11-13T14:54:54.071Z] #9 5.539 (need more rules? `semgrep login` for additional free Semgrep Registry rules)
+[2026-11-13T14:54:54.071Z] #9 5.539 
+[2026-11-13T14:54:54.072Z] #9 5.565 If Semgrep missed a finding, please send us feedback to let us know!
+[2026-11-13T14:54:54.072Z] #9 5.565 See https://semgrep.dev/docs/reporting-false-negatives/
+[2026-11-13T14:54:55.416Z] #9 DONE 6.8s
+[2026-11-13T14:54:55.416Z] 
+[2026-11-13T14:54:55.416Z] #10 exporting to image
+[2026-11-13T14:54:55.416Z] #10 exporting layers 0.1s done
+[2026-11-13T14:54:55.416Z] #10 writing image sha256:2443f29cfcd4906e81dd38d5fe7418ddd7d59ee58fa83351300e06e8fae58c5b done
+[2026-11-13T14:54:55.416Z] #10 naming to docker.io/library/gestor-gastos-semgrep done
+[2026-11-13T14:54:55.416Z] #10 DONE 0.1s
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Snyk)
+[Pipeline] echo
+[2026-11-13T14:54:55.587Z] Analizando dependencias del backend con Snyk...
+[Pipeline] withCredentials
+[2026-11-13T14:54:55.706Z] Masking supported pattern matches of $SNYK_TOKEN
+[Pipeline] {
+[Pipeline] sh
+[2026-11-13T14:54:56.009Z] + set +x
+[2026-11-13T14:55:01.208Z] Collecting fastapi==0.162.4 (from -r requirements.txt (line 1))
+[2026-11-13T14:55:01.208Z]   Downloading fastapi-0.162.4-py3-none-any.whl.metadata (27 kB)
+[2026-11-13T14:55:01.208Z] Collecting starlette==1.10.0 (from -r requirements.txt (line 2))
+[2026-11-13T14:55:01.208Z]   Downloading starlette-1.10.0-py3-none-any.whl.metadata (6.6 kB)
+[2026-11-13T14:55:01.208Z] Collecting uvicorn==0.30.6 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:55:01.208Z]   Downloading uvicorn-0.30.6-py3-none-any.whl.metadata (6.6 kB)
+[2026-11-13T14:55:01.208Z] Collecting prometheus-fastapi-instrumentator==8.1.0 (from -r requirements.txt (line 4))
+[2026-11-13T14:55:01.208Z]   Downloading prometheus_fastapi_instrumentator-8.1.0-py3-none-any.whl.metadata (13 kB)
+[2026-11-13T14:55:01.208Z] Collecting anyio>=4.1.0 (from fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:55:01.208Z]   Downloading anyio-4.16.0-py3-none-any.whl.metadata (4.7 kB)
+[2026-11-13T14:55:01.208Z] Collecting pydantic>=2.9.0 (from fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:55:01.208Z]   Downloading pydantic-2.14.3-py3-none-any.whl.metadata (141 kB)
+[2026-11-13T14:55:01.208Z] Collecting typing-extensions>=4.8.0 (from fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:55:01.208Z]   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+[2026-11-13T14:55:01.208Z] Collecting typing-inspection>=0.4.2 (from fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:55:01.209Z]   Downloading typing_inspection-0.4.5-py3-none-any.whl.metadata (2.6 kB)
+[2026-11-13T14:55:01.209Z] Collecting annotated-doc>=0.0.2 (from fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:55:01.209Z]   Downloading annotated_doc-0.0.6-py3-none-any.whl.metadata (6.5 kB)
+[2026-11-13T14:55:01.209Z] Collecting opentelemetry-api>=1.44.0 (from fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:55:01.209Z]   Downloading opentelemetry_api-1.45.2-py3-none-any.whl.metadata (1.4 kB)
+[2026-11-13T14:55:01.209Z] Collecting click>=7.0 (from uvicorn==0.30.6->uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:55:01.209Z]   Downloading click-8.5.1-py3-none-any.whl.metadata (2.6 kB)
+[2026-11-13T14:55:01.209Z] Collecting h11>=0.8 (from uvicorn==0.30.6->uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:55:01.209Z]   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+[2026-11-13T14:55:01.459Z] Collecting prometheus-client<1.0.0,>=0.8.0 (from prometheus-fastapi-instrumentator==8.1.0->-r requirements.txt (line 4))
+[2026-11-13T14:55:01.459Z]   Downloading prometheus_client-0.26.0-py3-none-any.whl.metadata (2.1 kB)
+[2026-11-13T14:55:01.459Z] Collecting httptools>=0.5.0 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:55:01.459Z]   Downloading httptools-0.9.0-cp315-cp315-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (3.5 kB)
+[2026-11-13T14:55:01.459Z] Collecting python-dotenv>=0.13 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:55:01.459Z]   Downloading python_dotenv-1.2.4-py3-none-any.whl.metadata (29 kB)
+[2026-11-13T14:55:01.459Z] Collecting pyyaml>=5.1 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:55:01.459Z]   Downloading pyyaml-6.0.3.tar.gz (130 kB)
+[2026-11-13T14:55:01.710Z]   Installing build dependencies: started
+[2026-11-13T14:55:03.572Z]   Installing build dependencies: finished with status 'done'
+[2026-11-13T14:55:03.572Z]   Getting requirements to build wheel: started
+[2026-11-13T14:55:06.056Z]   Getting requirements to build wheel: finished with status 'done'
+[2026-11-13T14:55:06.057Z]   Preparing metadata (pyproject.toml): started
+[2026-11-13T14:55:06.307Z]   Preparing metadata (pyproject.toml): finished with status 'done'
+[2026-11-13T14:55:06.307Z] Collecting uvloop!=0.15.0,!=0.15.1,>=0.14.0 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:55:06.307Z]   Downloading uvloop-0.23.0-cp315-cp315-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (5.1 kB)
+[2026-11-13T14:55:06.558Z] Collecting watchfiles>=0.13 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:55:06.558Z]   Downloading watchfiles-1.3.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+[2026-11-13T14:55:06.558Z] Collecting websockets>=10.4 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:55:06.558Z]   Downloading websockets-17.4-cp315-cp315-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.3 kB)
+[2026-11-13T14:55:06.558Z] Collecting idna>=2.8 (from anyio>=4.1.0->fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:55:06.558Z]   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+[2026-11-13T14:55:06.808Z] Collecting annotated-types>=0.6.0 (from pydantic>=2.9.0->fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:55:06.808Z]   Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+[2026-11-13T14:55:07.720Z] Collecting pydantic-core==2.50.4 (from pydantic>=2.9.0->fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:55:07.720Z]   Downloading pydantic_core-2.50.4-cp315-cp315-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.6 kB)
+[2026-11-13T14:55:07.720Z] Downloading fastapi-0.162.4-py3-none-any.whl (151 kB)
+[2026-11-13T14:55:07.720Z] Downloading starlette-1.10.0-py3-none-any.whl (80 kB)
+[2026-11-13T14:55:07.720Z] Downloading uvicorn-0.30.6-py3-none-any.whl (62 kB)
+[2026-11-13T14:55:07.720Z] Downloading prometheus_fastapi_instrumentator-8.1.0-py3-none-any.whl (19 kB)
+[2026-11-13T14:55:07.720Z] Downloading anyio-4.16.0-py3-none-any.whl (134 kB)
+[2026-11-13T14:55:07.720Z] Downloading prometheus_client-0.26.0-py3-none-any.whl (64 kB)
+[2026-11-13T14:55:07.720Z] Downloading annotated_doc-0.0.6-py3-none-any.whl (5.3 kB)
+[2026-11-13T14:55:07.720Z] Downloading click-8.5.1-py3-none-any.whl (126 kB)
+[2026-11-13T14:55:07.720Z] Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+[2026-11-13T14:55:07.720Z] Downloading httptools-0.9.0-cp315-cp315-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (515 kB)
+[2026-11-13T14:55:07.720Z] Downloading idna-3.20-py3-none-any.whl (69 kB)
+[2026-11-13T14:55:07.971Z] Downloading opentelemetry_api-1.45.2-py3-none-any.whl (60 kB)
+[2026-11-13T14:55:07.971Z] Downloading pydantic-2.14.3-py3-none-any.whl (494 kB)
+[2026-11-13T14:55:07.971Z] Downloading pydantic_core-2.50.4-cp315-cp315-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (2.3 MB)
+[2026-11-13T14:55:07.971Z]    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 MB 17.2 MB/s  0:00:00
+[2026-11-13T14:55:07.971Z] Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+[2026-11-13T14:55:08.222Z] Downloading python_dotenv-1.2.4-py3-none-any.whl (23 kB)
+[2026-11-13T14:55:08.222Z] Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+[2026-11-13T14:55:08.222Z] Downloading typing_inspection-0.4.5-py3-none-any.whl (14 kB)
+[2026-11-13T14:55:08.222Z] Downloading uvloop-0.23.0-cp315-cp315-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (4.5 MB)
+[2026-11-13T14:55:08.473Z]    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 19.0 MB/s  0:00:00
+[2026-11-13T14:55:08.473Z] Downloading watchfiles-1.3.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (458 kB)
+[2026-11-13T14:55:08.473Z] Downloading websockets-17.4-cp315-cp315-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (226 kB)
+[2026-11-13T14:55:08.473Z] Building wheels for collected packages: pyyaml
+[2026-11-13T14:55:08.473Z]   Building wheel for pyyaml (pyproject.toml): started
+[2026-11-13T14:55:18.353Z]   Building wheel for pyyaml (pyproject.toml): finished with status 'done'
+[2026-11-13T14:55:18.353Z]   Created wheel for pyyaml: filename=pyyaml-6.0.3-cp315-cp315-linux_x86_64.whl size=665652 sha256=81c8296eade14aad56a2308c362bb5be6fb11136657de85631dd128dd1e64118
+[2026-11-13T14:55:18.353Z]   Stored in directory: /tmp/pip-ephem-wheel-cache-lpx74_in/wheels/39/c5/03/188d3f8dc792f835b1e767b5e6e0fec41846dc06f6dd368652
+[2026-11-13T14:55:18.353Z] Successfully built pyyaml
+[2026-11-13T14:55:18.353Z] Installing collected packages: websockets, uvloop, typing-extensions, pyyaml, python-dotenv, prometheus-client, idna, httptools, h11, click, annotated-types, annotated-doc, uvicorn, typing-inspection, pydantic-core, opentelemetry-api, anyio, watchfiles, starlette, pydantic, prometheus-fastapi-instrumentator, fastapi
+[2026-11-13T14:55:19.696Z] 
+[2026-11-13T14:55:19.697Z] Successfully installed annotated-doc-0.0.6 annotated-types-0.8.0 anyio-4.16.0 click-8.5.1 fastapi-0.162.4 h11-0.16.0 httptools-0.9.0 idna-3.20 opentelemetry-api-1.45.2 prometheus-client-0.26.0 prometheus-fastapi-instrumentator-8.1.0 pydantic-2.14.3 pydantic-core-2.50.4 python-dotenv-1.2.4 pyyaml-6.0.3 starlette-1.10.0 typing-extensions-4.16.0 typing-inspection-0.4.5 uvicorn-0.30.6 uvloop-0.23.0 watchfiles-1.3.0 websockets-17.4
+[2026-11-13T14:55:19.697Z] 
+[2026-11-13T14:55:19.697Z] [notice] A new release of pip is available: 26.2.2 -> 26.3
+[2026-11-13T14:55:19.697Z] [notice] To update, run: /tmp/snyk-venv/bin/python3 -m pip install --upgrade pip
+[2026-11-13T14:55:31.797Z] Testing  (requirements.txt) ...
+[2026-11-13T14:55:31.797Z] 
+[2026-11-13T14:55:31.797Z] Tested 16 dependencies for known issues, found 0 issues, 0 vulnerable paths.
+[2026-11-13T14:55:31.797Z] 
+[2026-11-13T14:55:31.797Z] Open Security issues: 0
+[2026-11-13T14:55:31.797Z] 
+[2026-11-13T14:55:31.797Z] ╭───────────────────────────────────────────────────────╮
+[2026-11-13T14:55:31.797Z] │ Test Summary                                          │
+[2026-11-13T14:55:31.797Z] │                                                       │
+[2026-11-13T14:55:31.797Z] │   Organization:                                       │
+[2026-11-13T14:55:31.797Z] │   Test type:         Software Composition Analysis    │
+[2026-11-13T14:55:31.797Z] │   Project name:      app                              │
+[2026-11-13T14:55:31.797Z] │   Project path:      /app                             │
+[2026-11-13T14:55:31.797Z] │   Target file:       requirements.txt                 │
+[2026-11-13T14:55:31.797Z] │                                                       │
+[2026-11-13T14:55:31.797Z] │   Total security issues: 0                            │
+[2026-11-13T14:55:31.797Z] ╰───────────────────────────────────────────────────────╯
+[2026-11-13T14:55:31.797Z] 
+[2026-11-13T14:55:31.798Z] 💡 Tip
+[2026-11-13T14:55:31.798Z] 
+[2026-11-13T14:55:31.798Z]    Some capabilities, including the ability to apply ignores, are unavailable. Retest the project with the --remote-repo-url parameter or from within a repository to enable full functionality.
+[2026-11-13T14:55:31.798Z]                                                                                                                                                                                                 
+[2026-11-13T14:55:31.798Z] 
+[2026-11-13T14:55:31.798Z] 💡 Tip
+[2026-11-13T14:55:31.798Z] 
+[2026-11-13T14:55:31.798Z]    You are currently viewing results with --severity-threshold applied.
+[2026-11-13T14:55:31.798Z]    To view all issues, remove the --severity-threshold flag            
+[2026-11-13T14:55:31.798Z]                                                                        
+[2026-11-13T14:55:31.798Z] 
+[2026-11-13T14:55:31.798Z] 💡 Tip
+[2026-11-13T14:55:31.798Z] 
+[2026-11-13T14:55:31.798Z]    To view ignored issues, use the --include-ignores option.
+[2026-11-13T14:55:31.798Z]                                                             
+[2026-11-13T14:55:31.798Z] 
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Verificar Docker)
+[Pipeline] echo
+[2026-11-13T14:55:33.337Z] Comprobando la conexión con Docker...
+[Pipeline] sh
+[2026-11-13T14:55:33.617Z] + docker version
+[2026-11-13T14:55:33.617Z] Client:
+[2026-11-13T14:55:33.617Z]  Version:           26.1.5+dfsg1
+[2026-11-13T14:55:33.617Z]  API version:       1.45
+[2026-11-13T14:55:33.617Z]  Go version:        go1.24.4
+[2026-11-13T14:55:33.617Z]  Git commit:        a72d7cd
+[2026-11-13T14:55:33.617Z]  Built:             Thu Aug 13 05:35:47 2026
+[2026-11-13T14:55:33.617Z]  OS/Arch:           linux/amd64
+[2026-11-13T14:55:33.617Z]  Context:           default
+[2026-11-13T14:55:33.617Z] 
+[2026-11-13T14:55:33.617Z] Server: Docker Desktop 4.83.0 (234302)
+[2026-11-13T14:55:33.617Z]  Engine:
+[2026-11-13T14:55:33.617Z]   Version:          29.6.2
+[2026-11-13T14:55:33.617Z]   API version:      1.55 (minimum version 1.40)
+[2026-11-13T14:55:33.617Z]   Go version:       go1.26.5
+[2026-11-13T14:55:33.617Z]   Git commit:       3d80467
+[2026-11-13T14:55:33.617Z]   Built:            Thu Jul 16 16:12:20 2026
+[2026-11-13T14:55:33.617Z]   OS/Arch:          linux/amd64
+[2026-11-13T14:55:33.617Z]   Experimental:     false
+[2026-11-13T14:55:33.617Z]  containerd:
+[2026-11-13T14:55:33.617Z]   Version:          v2.2.5
+[2026-11-13T14:55:33.617Z]   GitCommit:        e53c7c1516c3b2bff98eb76f1f4117477e6f4e66
+[2026-11-13T14:55:33.617Z]  runc:
+[2026-11-13T14:55:33.617Z]   Version:          1.3.6
+[2026-11-13T14:55:33.617Z]   GitCommit:        v1.3.6-0-g491b69ba
+[2026-11-13T14:55:33.617Z]  docker-init:
+[2026-11-13T14:55:33.617Z]   Version:          0.19.0
+[2026-11-13T14:55:33.617Z]   GitCommit:        de40ad0
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Build Docker)
+[Pipeline] echo
+[2026-11-13T14:55:33.759Z] Construyendo imagen Docker del backend...
+[Pipeline] sh
+[2026-11-13T14:55:34.035Z] + docker build -t gestor-gastos-backend:ci-12 ./gestor-gastos-backend
+[2026-11-13T14:55:34.286Z] #0 building with "default" instance using docker driver
+[2026-11-13T14:55:34.286Z] 
+[2026-11-13T14:55:34.286Z] #1 [internal] load build definition from Dockerfile
+[2026-11-13T14:55:34.286Z] #1 transferring dockerfile: 840B done
+[2026-11-13T14:55:34.286Z] #1 DONE 0.0s
+[2026-11-13T14:55:34.286Z] 
+[2026-11-13T14:55:34.286Z] #2 resolve image config for docker-image://docker.io/docker/dockerfile:1
+[2026-11-13T14:55:35.198Z] #2 DONE 1.0s
+[2026-11-13T14:55:35.448Z] 
+[2026-11-13T14:55:35.448Z] #3 docker-image://docker.io/docker/dockerfile:1@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+[2026-11-13T14:55:35.448Z] #3 CACHED
+[2026-11-13T14:55:35.448Z] 
+[2026-11-13T14:55:35.448Z] #4 [internal] load metadata for docker.io/library/python:3.12-slim
+[2026-11-13T14:55:35.448Z] #4 DONE 0.0s
+[2026-11-13T14:55:35.448Z] 
+[2026-11-13T14:55:35.448Z] #5 [internal] load .dockerignore
+[2026-11-13T14:55:35.448Z] #5 transferring context: 93B done
+[2026-11-13T14:55:35.448Z] #5 DONE 0.0s
+[2026-11-13T14:55:35.448Z] 
+[2026-11-13T14:55:35.448Z] #6 [builder 1/4] FROM docker.io/library/python:3.12-slim
+[2026-11-13T14:55:35.448Z] #6 DONE 0.0s
+[2026-11-13T14:55:35.448Z] 
+[2026-11-13T14:55:35.448Z] #7 [internal] load build context
+[2026-11-13T14:55:35.448Z] #7 transferring context: 176B done
+[2026-11-13T14:55:35.448Z] #7 DONE 0.0s
+[2026-11-13T14:55:35.448Z] 
+[2026-11-13T14:55:35.448Z] #8 [runtime 2/6] WORKDIR /app
+[2026-11-13T14:55:35.448Z] #8 CACHED
+[2026-11-13T14:55:35.448Z] 
+[2026-11-13T14:55:35.448Z] #9 [builder 2/4] WORKDIR /build
+[2026-11-13T14:55:35.448Z] #9 CACHED
+[2026-11-13T14:55:35.448Z] 
+[2026-11-13T14:55:35.448Z] #10 [runtime 3/6] RUN groupadd --gid 10001 app     && useradd --uid 10001 --gid app --no-create-home app     && mkdir /app/data     && chown 10001:10001 /app/data
+[2026-11-13T14:55:35.448Z] #10 CACHED
+[2026-11-13T14:55:35.448Z] 
+[2026-11-13T14:55:35.448Z] #11 [builder 3/4] COPY requirements.txt .
+[2026-11-13T14:55:35.448Z] #11 DONE 0.0s
+[2026-11-13T14:55:35.448Z] 
+[2026-11-13T14:55:35.448Z] #12 [runtime 4/6] COPY requirements.txt .
+[2026-11-13T14:55:35.699Z] #12 DONE 0.1s
+[2026-11-13T14:55:35.699Z] 
+[2026-11-13T14:55:35.699Z] #13 [builder 4/4] RUN pip wheel --no-cache-dir --wheel-dir /wheels -r requirements.txt
+[2026-11-13T14:55:37.563Z] #13 2.095 Collecting fastapi==0.162.4 (from -r requirements.txt (line 1))
+[2026-11-13T14:55:37.814Z] #13 2.183   Downloading fastapi-0.162.4-py3-none-any.whl.metadata (27 kB)
+[2026-11-13T14:55:37.814Z] #13 2.245 Collecting starlette==1.10.0 (from -r requirements.txt (line 2))
+[2026-11-13T14:55:37.814Z] #13 2.265   Downloading starlette-1.10.0-py3-none-any.whl.metadata (6.6 kB)
+[2026-11-13T14:55:37.814Z] #13 2.312 Collecting uvicorn==0.30.6 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:55:37.814Z] #13 2.330   Downloading uvicorn-0.30.6-py3-none-any.whl.metadata (6.6 kB)
+[2026-11-13T14:55:37.814Z] #13 2.366 Collecting prometheus-fastapi-instrumentator==8.1.0 (from -r requirements.txt (line 4))
+[2026-11-13T14:55:38.064Z] #13 2.386   Downloading prometheus_fastapi_instrumentator-8.1.0-py3-none-any.whl.metadata (13 kB)
+[2026-11-13T14:55:38.065Z] #13 2.435 Collecting anyio>=4.1.0 (from fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:55:38.065Z] #13 2.454   Downloading anyio-4.16.0-py3-none-any.whl.metadata (4.7 kB)
+[2026-11-13T14:55:38.065Z] #13 2.638 Collecting pydantic>=2.9.0 (from fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:55:38.315Z] #13 2.658   Downloading pydantic-2.14.3-py3-none-any.whl.metadata (141 kB)
+[2026-11-13T14:55:38.315Z] #13 2.729 Collecting typing-extensions>=4.8.0 (from fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:55:38.315Z] #13 2.748   Downloading typing_extensions-4.16.0-py3-none-any.whl.metadata (3.3 kB)
+[2026-11-13T14:55:38.315Z] #13 2.774 Collecting typing-inspection>=0.4.2 (from fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:55:38.315Z] #13 2.794   Downloading typing_inspection-0.4.5-py3-none-any.whl.metadata (2.6 kB)
+[2026-11-13T14:55:38.315Z] #13 2.816 Collecting annotated-doc>=0.0.2 (from fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:55:38.315Z] #13 2.836   Downloading annotated_doc-0.0.6-py3-none-any.whl.metadata (6.5 kB)
+[2026-11-13T14:55:38.315Z] #13 2.878 Collecting opentelemetry-api>=1.44.0 (from fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:55:38.566Z] #13 2.896   Downloading opentelemetry_api-1.45.2-py3-none-any.whl.metadata (1.4 kB)
+[2026-11-13T14:55:38.566Z] #13 2.948 Collecting click>=7.0 (from uvicorn==0.30.6->uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:55:38.566Z] #13 2.967   Downloading click-8.5.1-py3-none-any.whl.metadata (2.6 kB)
+[2026-11-13T14:55:38.566Z] #13 2.996 Collecting h11>=0.8 (from uvicorn==0.30.6->uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:55:38.566Z] #13 3.015   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+[2026-11-13T14:55:38.566Z] #13 3.053 Collecting prometheus-client<1.0.0,>=0.8.0 (from prometheus-fastapi-instrumentator==8.1.0->-r requirements.txt (line 4))
+[2026-11-13T14:55:38.566Z] #13 3.072   Downloading prometheus_client-0.26.0-py3-none-any.whl.metadata (2.1 kB)
+[2026-11-13T14:55:38.566Z] #13 3.148 Collecting httptools>=0.5.0 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:55:38.817Z] #13 3.167   Downloading httptools-0.9.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (3.5 kB)
+[2026-11-13T14:55:38.817Z] #13 3.199 Collecting python-dotenv>=0.13 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:55:38.817Z] #13 3.220   Downloading python_dotenv-1.2.4-py3-none-any.whl.metadata (29 kB)
+[2026-11-13T14:55:38.817Z] #13 3.278 Collecting pyyaml>=5.1 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:55:38.817Z] #13 3.297   Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+[2026-11-13T14:55:38.817Z] #13 3.366 Collecting uvloop!=0.15.0,!=0.15.1,>=0.14.0 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:55:38.817Z] #13 3.386   Downloading uvloop-0.23.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (5.1 kB)
+[2026-11-13T14:55:39.068Z] #13 3.489 Collecting watchfiles>=0.13 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:55:39.068Z] #13 3.509   Downloading watchfiles-1.3.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+[2026-11-13T14:55:39.068Z] #13 3.686 Collecting websockets>=10.4 (from uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:55:39.319Z] #13 3.706   Downloading websockets-17.4-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (6.3 kB)
+[2026-11-13T14:55:39.319Z] #13 3.739 Collecting idna>=2.8 (from anyio>=4.1.0->fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:55:39.319Z] #13 3.758   Downloading idna-3.20-py3-none-any.whl.metadata (7.2 kB)
+[2026-11-13T14:55:39.319Z] #13 3.795 Collecting annotated-types>=0.6.0 (from pydantic>=2.9.0->fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:55:39.570Z] #13 3.813   Downloading annotated_types-0.8.0-py3-none-any.whl.metadata (15 kB)
+[2026-11-13T14:55:40.482Z] #13 4.795 Collecting pydantic-core==2.50.4 (from pydantic>=2.9.0->fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:55:40.482Z] #13 4.814   Downloading pydantic_core-2.50.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (6.6 kB)
+[2026-11-13T14:55:40.482Z] #13 4.862 Downloading fastapi-0.162.4-py3-none-any.whl (151 kB)
+[2026-11-13T14:55:40.482Z] #13 4.899 Downloading starlette-1.10.0-py3-none-any.whl (80 kB)
+[2026-11-13T14:55:40.482Z] #13 4.925 Downloading uvicorn-0.30.6-py3-none-any.whl (62 kB)
+[2026-11-13T14:55:40.482Z] #13 4.953 Downloading prometheus_fastapi_instrumentator-8.1.0-py3-none-any.whl (19 kB)
+[2026-11-13T14:55:40.482Z] #13 4.973 Downloading annotated_doc-0.0.6-py3-none-any.whl (5.3 kB)
+[2026-11-13T14:55:40.482Z] #13 4.994 Downloading anyio-4.16.0-py3-none-any.whl (134 kB)
+[2026-11-13T14:55:40.732Z] #13 5.054 Downloading click-8.5.1-py3-none-any.whl (126 kB)
+[2026-11-13T14:55:40.732Z] #13 5.076 Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+[2026-11-13T14:55:40.733Z] #13 5.098 Downloading httptools-0.9.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (552 kB)
+[2026-11-13T14:55:40.733Z] #13 5.140    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 552.8/552.8 kB 17.7 MB/s eta 0:00:00
+[2026-11-13T14:55:40.733Z] #13 5.162 Downloading opentelemetry_api-1.45.2-py3-none-any.whl (60 kB)
+[2026-11-13T14:55:40.733Z] #13 5.182 Downloading prometheus_client-0.26.0-py3-none-any.whl (64 kB)
+[2026-11-13T14:55:40.733Z] #13 5.203 Downloading pydantic-2.14.3-py3-none-any.whl (494 kB)
+[2026-11-13T14:55:40.733Z] #13 5.260 Downloading pydantic_core-2.50.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (2.3 MB)
+[2026-11-13T14:55:40.983Z] #13 5.394    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.3/2.3 MB 17.2 MB/s eta 0:00:00
+[2026-11-13T14:55:40.984Z] #13 5.415 Downloading python_dotenv-1.2.4-py3-none-any.whl (23 kB)
+[2026-11-13T14:55:40.984Z] #13 5.437 Downloading pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (807 kB)
+[2026-11-13T14:55:40.984Z] #13 5.489    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 807.9/807.9 kB 17.9 MB/s eta 0:00:00
+[2026-11-13T14:55:40.984Z] #13 5.510 Downloading typing_extensions-4.16.0-py3-none-any.whl (45 kB)
+[2026-11-13T14:55:41.234Z] #13 5.531 Downloading typing_inspection-0.4.5-py3-none-any.whl (14 kB)
+[2026-11-13T14:55:41.234Z] #13 5.555 Downloading uvloop-0.23.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (4.5 MB)
+[2026-11-13T14:55:41.234Z] #13 5.803    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 18.4 MB/s eta 0:00:00
+[2026-11-13T14:55:41.485Z] #13 5.824 Downloading watchfiles-1.3.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (458 kB)
+[2026-11-13T14:55:41.485Z] #13 5.871 Downloading websockets-17.4-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (226 kB)
+[2026-11-13T14:55:41.485Z] #13 5.902 Downloading annotated_types-0.8.0-py3-none-any.whl (13 kB)
+[2026-11-13T14:55:41.485Z] #13 5.921 Downloading idna-3.20-py3-none-any.whl (69 kB)
+[2026-11-13T14:55:41.736Z] #13 5.974 Saved /wheels/fastapi-0.162.4-py3-none-any.whl
+[2026-11-13T14:55:41.736Z] #13 5.975 Saved /wheels/starlette-1.10.0-py3-none-any.whl
+[2026-11-13T14:55:41.736Z] #13 5.976 Saved /wheels/uvicorn-0.30.6-py3-none-any.whl
+[2026-11-13T14:55:41.736Z] #13 5.977 Saved /wheels/prometheus_fastapi_instrumentator-8.1.0-py3-none-any.whl
+[2026-11-13T14:55:41.736Z] #13 5.977 Saved /wheels/annotated_doc-0.0.6-py3-none-any.whl
+[2026-11-13T14:55:41.736Z] #13 5.978 Saved /wheels/anyio-4.16.0-py3-none-any.whl
+[2026-11-13T14:55:41.736Z] #13 5.979 Saved /wheels/click-8.5.1-py3-none-any.whl
+[2026-11-13T14:55:41.736Z] #13 5.980 Saved /wheels/h11-0.16.0-py3-none-any.whl
+[2026-11-13T14:55:41.736Z] #13 5.981 Saved /wheels/httptools-0.9.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl
+[2026-11-13T14:55:41.736Z] #13 5.981 Saved /wheels/opentelemetry_api-1.45.2-py3-none-any.whl
+[2026-11-13T14:55:41.736Z] #13 5.982 Saved /wheels/prometheus_client-0.26.0-py3-none-any.whl
+[2026-11-13T14:55:41.736Z] #13 5.983 Saved /wheels/pydantic-2.14.3-py3-none-any.whl
+[2026-11-13T14:55:41.736Z] #13 5.986 Saved /wheels/pydantic_core-2.50.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl
+[2026-11-13T14:55:41.736Z] #13 5.987 Saved /wheels/python_dotenv-1.2.4-py3-none-any.whl
+[2026-11-13T14:55:41.736Z] #13 5.989 Saved /wheels/pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl
+[2026-11-13T14:55:41.736Z] #13 5.990 Saved /wheels/typing_extensions-4.16.0-py3-none-any.whl
+[2026-11-13T14:55:41.736Z] #13 5.990 Saved /wheels/typing_inspection-0.4.5-py3-none-any.whl
+[2026-11-13T14:55:41.736Z] #13 5.995 Saved /wheels/uvloop-0.23.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl
+[2026-11-13T14:55:41.736Z] #13 5.996 Saved /wheels/watchfiles-1.3.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl
+[2026-11-13T14:55:41.736Z] #13 5.997 Saved /wheels/websockets-17.4-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl
+[2026-11-13T14:55:41.736Z] #13 5.997 Saved /wheels/annotated_types-0.8.0-py3-none-any.whl
+[2026-11-13T14:55:41.736Z] #13 5.998 Saved /wheels/idna-3.20-py3-none-any.whl
+[2026-11-13T14:55:41.736Z] #13 6.128 
+[2026-11-13T14:55:41.736Z] #13 6.128 [notice] A new release of pip is available: 25.0.1 -> 26.3
+[2026-11-13T14:55:41.736Z] #13 6.128 [notice] To update, run: pip install --upgrade pip
+[2026-11-13T14:55:41.986Z] #13 DONE 6.4s
+[2026-11-13T14:55:42.237Z] 
+[2026-11-13T14:55:42.237Z] #14 [runtime 5/6] RUN --mount=type=bind,from=builder,source=/wheels,target=/wheels     pip install --no-cache-dir --no-index --find-links=/wheels -r requirements.txt     && pip check
+[2026-11-13T14:55:44.099Z] #14 1.785 Looking in links: /wheels
+[2026-11-13T14:55:44.099Z] #14 1.798 Processing /wheels/fastapi-0.162.4-py3-none-any.whl (from -r requirements.txt (line 1))
+[2026-11-13T14:55:44.100Z] #14 1.813 Processing /wheels/starlette-1.10.0-py3-none-any.whl (from -r requirements.txt (line 2))
+[2026-11-13T14:55:44.100Z] #14 1.818 Processing /wheels/uvicorn-0.30.6-py3-none-any.whl (from uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:55:44.100Z] #14 1.823 Processing /wheels/prometheus_fastapi_instrumentator-8.1.0-py3-none-any.whl (from -r requirements.txt (line 4))
+[2026-11-13T14:55:44.100Z] #14 1.828 Processing /wheels/anyio-4.16.0-py3-none-any.whl (from fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:55:44.100Z] #14 1.833 Processing /wheels/pydantic-2.14.3-py3-none-any.whl (from fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:55:44.100Z] #14 1.843 Processing /wheels/typing_extensions-4.16.0-py3-none-any.whl (from fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:55:44.100Z] #14 1.846 Processing /wheels/typing_inspection-0.4.5-py3-none-any.whl (from fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:55:44.100Z] #14 1.849 Processing /wheels/annotated_doc-0.0.6-py3-none-any.whl (from fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:55:44.100Z] #14 1.852 Processing /wheels/opentelemetry_api-1.45.2-py3-none-any.whl (from fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:55:44.100Z] #14 1.859 Processing /wheels/click-8.5.1-py3-none-any.whl (from uvicorn==0.30.6->uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:55:44.100Z] #14 1.862 Processing /wheels/h11-0.16.0-py3-none-any.whl (from uvicorn==0.30.6->uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:55:44.100Z] #14 1.867 Processing /wheels/prometheus_client-0.26.0-py3-none-any.whl (from prometheus-fastapi-instrumentator==8.1.0->-r requirements.txt (line 4))
+[2026-11-13T14:55:44.100Z] #14 1.874 Processing /wheels/httptools-0.9.0-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (from uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:55:44.100Z] #14 1.879 Processing /wheels/python_dotenv-1.2.4-py3-none-any.whl (from uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:55:44.100Z] #14 1.885 Processing /wheels/pyyaml-6.0.3-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (from uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:55:44.100Z] #14 1.890 Processing /wheels/uvloop-0.23.0-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (from uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:55:44.350Z] #14 1.905 Processing /wheels/watchfiles-1.3.0-cp310-abi3-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (from uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:55:44.350Z] #14 1.910 Processing /wheels/websockets-17.4-cp312-cp312-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (from uvicorn[standard]==0.30.6->-r requirements.txt (line 3))
+[2026-11-13T14:55:44.350Z] #14 1.916 Processing /wheels/idna-3.20-py3-none-any.whl (from anyio>=4.1.0->fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:55:44.350Z] #14 1.925 Processing /wheels/annotated_types-0.8.0-py3-none-any.whl (from pydantic>=2.9.0->fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:55:44.350Z] #14 1.929 Processing /wheels/pydantic_core-2.50.4-cp312-cp312-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (from pydantic>=2.9.0->fastapi==0.162.4->-r requirements.txt (line 1))
+[2026-11-13T14:55:44.351Z] #14 2.011 Installing collected packages: websockets, uvloop, typing-extensions, pyyaml, python-dotenv, prometheus-client, idna, httptools, h11, click, annotated-types, annotated-doc, uvicorn, typing-inspection, pydantic-core, opentelemetry-api, anyio, watchfiles, starlette, pydantic, prometheus-fastapi-instrumentator, fastapi
+[2026-11-13T14:55:45.694Z] #14 3.521 Successfully installed annotated-doc-0.0.6 annotated-types-0.8.0 anyio-4.16.0 click-8.5.1 fastapi-0.162.4 h11-0.16.0 httptools-0.9.0 idna-3.20 opentelemetry-api-1.45.2 prometheus-client-0.26.0 prometheus-fastapi-instrumentator-8.1.0 pydantic-2.14.3 pydantic-core-2.50.4 python-dotenv-1.2.4 pyyaml-6.0.3 starlette-1.10.0 typing-extensions-4.16.0 typing-inspection-0.4.5 uvicorn-0.30.6 uvloop-0.23.0 watchfiles-1.3.0 websockets-17.4
+[2026-11-13T14:55:45.945Z] #14 3.521 WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+[2026-11-13T14:55:46.195Z] #14 3.864 No broken requirements found.
+[2026-11-13T14:55:46.195Z] #14 DONE 4.1s
+[2026-11-13T14:55:46.446Z] 
+[2026-11-13T14:55:46.446Z] #15 [runtime 6/6] COPY main.py .
+[2026-11-13T14:55:46.446Z] #15 DONE 0.1s
+[2026-11-13T14:55:46.446Z] 
+[2026-11-13T14:55:46.446Z] #16 exporting to image
+[2026-11-13T14:55:46.446Z] #16 exporting layers
+[2026-11-13T14:55:46.697Z] #16 exporting layers 0.4s done
+[2026-11-13T14:55:46.947Z] #16 writing image sha256:cbb7f9c24b2008b9581f92c893c4129fa3c935f898f388aefe0454a6c47f0b39 done
+[2026-11-13T14:55:46.947Z] #16 naming to docker.io/library/gestor-gastos-backend:ci-12 done
+[2026-11-13T14:55:46.947Z] #16 DONE 0.5s
+[Pipeline] echo
+[2026-11-13T14:55:46.982Z] Construyendo imagen Docker del frontend...
+[Pipeline] sh
+[2026-11-13T14:55:47.263Z] + docker build -t gestor-gastos-frontend:ci-12 ./gestor-gastos-frontend
+[2026-11-13T14:55:47.514Z] #0 building with "default" instance using docker driver
+[2026-11-13T14:55:47.514Z] 
+[2026-11-13T14:55:47.514Z] #1 [internal] load build definition from Dockerfile
+[2026-11-13T14:55:47.514Z] #1 transferring dockerfile: 762B done
+[2026-11-13T14:55:47.514Z] #1 DONE 0.0s
+[2026-11-13T14:55:47.514Z] 
+[2026-11-13T14:55:47.514Z] #2 resolve image config for docker-image://docker.io/docker/dockerfile:1
+[2026-11-13T14:55:47.514Z] #2 DONE 0.2s
+[2026-11-13T14:55:47.765Z] 
+[2026-11-13T14:55:47.765Z] #3 docker-image://docker.io/docker/dockerfile:1@sha256:4edf897a3ffa55b89f906fc8cc78afdb3f1834cc9c7083565e611a8a7d5fe99e
+[2026-11-13T14:55:47.765Z] #3 CACHED
+[2026-11-13T14:55:47.765Z] 
+[2026-11-13T14:55:47.765Z] #4 [internal] load metadata for docker.io/library/nginx:1.28-alpine
+[2026-11-13T14:55:48.678Z] #4 ...
+[2026-11-13T14:55:48.678Z] 
+[2026-11-13T14:55:48.678Z] #5 [internal] load metadata for docker.io/library/node:22-alpine
+[2026-11-13T14:55:48.678Z] #5 DONE 0.9s
+[2026-11-13T14:55:48.678Z] 
+[2026-11-13T14:55:48.678Z] #4 [internal] load metadata for docker.io/library/nginx:1.28-alpine
+[2026-11-13T14:55:48.678Z] #4 DONE 1.0s
+[2026-11-13T14:55:48.678Z] 
+[2026-11-13T14:55:48.678Z] #6 [internal] load .dockerignore
+[2026-11-13T14:55:48.678Z] #6 transferring context: 55B done
+[2026-11-13T14:55:48.678Z] #6 DONE 0.0s
+[2026-11-13T14:55:48.678Z] 
+[2026-11-13T14:55:48.678Z] #7 [runtime 1/4] FROM docker.io/library/nginx:1.28-alpine@sha256:a8b39bd9cf0f83869a2162827a0caf6137ddf759d50a171451b335cecc87d236
+[2026-11-13T14:55:48.678Z] #7 DONE 0.0s
+[2026-11-13T14:55:48.678Z] 
+[2026-11-13T14:55:48.678Z] #8 [builder 1/4] FROM docker.io/library/node:22-alpine@sha256:1314fb30ec37592d5845e5a160d522c0e680972aa534549940b8d73bde88481a
+[2026-11-13T14:55:48.678Z] #8 DONE 0.0s
+[2026-11-13T14:55:48.678Z] 
+[2026-11-13T14:55:48.678Z] #9 [internal] load build context
+[2026-11-13T14:55:48.678Z] #9 transferring context: 180B done
+[2026-11-13T14:55:48.678Z] #9 DONE 0.0s
+[2026-11-13T14:55:48.927Z] 
+[2026-11-13T14:55:48.927Z] #10 [runtime 2/4] RUN apk del --no-cache nginx-module-acme nginx-module-geoip nginx-module-image-filter nginx-module-njs nginx-module-xslt     && apk add --no-cache --upgrade nginx=1.28.3-r7     && apk upgrade --no-cache
+[2026-11-13T14:55:48.927Z] #10 CACHED
+[2026-11-13T14:55:48.927Z] 
+[2026-11-13T14:55:48.927Z] #11 [runtime 3/4] COPY nginx.conf /etc/nginx/nginx.conf
+[2026-11-13T14:55:48.927Z] #11 CACHED
+[2026-11-13T14:55:48.927Z] 
+[2026-11-13T14:55:48.927Z] #12 [builder 2/4] WORKDIR /build
+[2026-11-13T14:55:48.927Z] #12 CACHED
+[2026-11-13T14:55:48.927Z] 
+[2026-11-13T14:55:48.927Z] #13 [builder 3/4] COPY index.html v1.html styles.css app.js config.docker.js ./
+[2026-11-13T14:55:48.927Z] #13 CACHED
+[2026-11-13T14:55:48.927Z] 
+[2026-11-13T14:55:48.927Z] #14 [builder 4/4] RUN node --check app.js     && node --check config.docker.js     && mkdir /dist     && cp index.html v1.html styles.css app.js /dist/     && cp config.docker.js /dist/config.js
+[2026-11-13T14:55:48.927Z] #14 CACHED
+[2026-11-13T14:55:48.927Z] 
+[2026-11-13T14:55:48.927Z] #15 [runtime 4/4] COPY --from=builder /dist/ /usr/share/nginx/html/
+[2026-11-13T14:55:48.927Z] #15 CACHED
+[2026-11-13T14:55:48.927Z] 
+[2026-11-13T14:55:48.927Z] #16 exporting to image
+[2026-11-13T14:55:48.927Z] #16 exporting layers done
+[2026-11-13T14:55:48.927Z] #16 writing image sha256:2479ece74a51041603e31e3da9f78a5b7ac2266c04b875832a2077f5eadf31d4 done
+[2026-11-13T14:55:48.927Z] #16 naming to docker.io/library/gestor-gastos-frontend:ci-12 done
+[2026-11-13T14:55:48.927Z] #16 DONE 0.0s
+[Pipeline] echo
+[2026-11-13T14:55:48.968Z] Verificando las imagenes construidas...
+[Pipeline] sh
+[2026-11-13T14:55:49.256Z] + docker image inspect gestor-gastos-backend:ci-12
+[Pipeline] sh
+[2026-11-13T14:55:49.544Z] + docker image inspect gestor-gastos-frontend:ci-12
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Push Docker)
+[Pipeline] echo
+[2026-11-13T14:55:49.707Z] Publicando imagenes en Docker Hub...
+[Pipeline] withCredentials
+[2026-11-13T14:55:49.832Z] Masking supported pattern matches of $DOCKERHUB_TOKEN
+[Pipeline] {
+[Pipeline] sh
+[2026-11-13T14:55:50.143Z] + set +x
+[2026-11-13T14:55:51.488Z] WARNING! Your password will be stored unencrypted in /tmp/tmp.weARoP9ch1/config.json.
+[2026-11-13T14:55:51.488Z] Configure a credential helper to remove this warning. See
+[2026-11-13T14:55:51.488Z] https://docs.docker.com/engine/reference/commandline/login/#credentials-store
+[2026-11-13T14:55:51.488Z] 
+[2026-11-13T14:55:51.488Z] Login Succeeded
+[2026-11-13T14:55:51.488Z] The push refers to repository [docker.io/mariprieto01/gestor-gastos-backend]
+[2026-11-13T14:55:51.739Z] 73b215ca88d4: Preparing
+[2026-11-13T14:55:51.739Z] 7192edc669a6: Preparing
+[2026-11-13T14:55:51.739Z] f00411b3fa72: Preparing
+[2026-11-13T14:55:51.739Z] d7026a93e704: Preparing
+[2026-11-13T14:55:51.739Z] fa09bdd7add2: Preparing
+[2026-11-13T14:55:51.739Z] 340931a1d986: Preparing
+[2026-11-13T14:55:51.739Z] 96a69f98ae07: Preparing
+[2026-11-13T14:55:51.739Z] 3dc3efdf0110: Preparing
+[2026-11-13T14:55:51.739Z] dd57f90311a2: Preparing
+[2026-11-13T14:55:51.739Z] 340931a1d986: Waiting
+[2026-11-13T14:55:51.739Z] 96a69f98ae07: Waiting
+[2026-11-13T14:55:51.739Z] 3dc3efdf0110: Waiting
+[2026-11-13T14:55:51.739Z] dd57f90311a2: Waiting
+[2026-11-13T14:55:52.650Z] d7026a93e704: Layer already exists
+[2026-11-13T14:55:52.650Z] fa09bdd7add2: Layer already exists
+[2026-11-13T14:55:52.650Z] 96a69f98ae07: Layer already exists
+[2026-11-13T14:55:52.650Z] 340931a1d986: Layer already exists
+[2026-11-13T14:55:52.650Z] dd57f90311a2: Layer already exists
+[2026-11-13T14:55:52.650Z] 3dc3efdf0110: Layer already exists
+[2026-11-13T14:55:53.994Z] 73b215ca88d4: Pushed
+[2026-11-13T14:55:53.994Z] f00411b3fa72: Pushed
+[2026-11-13T14:56:03.871Z] 7192edc669a6: Pushed
+[2026-11-13T14:56:05.733Z] ci-12: digest: sha256:070521690ba7a25d5606729f91ee08df36967244657d34e16a2f63b6db3da900 size: 2200
+[2026-11-13T14:56:05.733Z] The push refers to repository [docker.io/mariprieto01/gestor-gastos-frontend]
+[2026-11-13T14:56:05.984Z] dd3abf0dad1b: Preparing
+[2026-11-13T14:56:05.984Z] 6e25068ac781: Preparing
+[2026-11-13T14:56:05.984Z] d0e2898c5768: Preparing
+[2026-11-13T14:56:05.984Z] f76f397f2ce6: Preparing
+[2026-11-13T14:56:05.984Z] 53c769b49ca0: Preparing
+[2026-11-13T14:56:05.984Z] 42608b42cb5e: Preparing
+[2026-11-13T14:56:05.984Z] a3446cc6c821: Preparing
+[2026-11-13T14:56:05.984Z] 9e707aa6db47: Preparing
+[2026-11-13T14:56:05.984Z] 47a53288c3ef: Preparing
+[2026-11-13T14:56:05.984Z] a2738b08d711: Preparing
+[2026-11-13T14:56:05.984Z] 989e799e6349: Preparing
+[2026-11-13T14:56:05.984Z] a3446cc6c821: Waiting
+[2026-11-13T14:56:05.984Z] 9e707aa6db47: Waiting
+[2026-11-13T14:56:05.984Z] 47a53288c3ef: Waiting
+[2026-11-13T14:56:05.984Z] a2738b08d711: Waiting
+[2026-11-13T14:56:05.984Z] 989e799e6349: Waiting
+[2026-11-13T14:56:05.984Z] 42608b42cb5e: Waiting
+[2026-11-13T14:56:06.896Z] dd3abf0dad1b: Layer already exists
+[2026-11-13T14:56:06.896Z] f76f397f2ce6: Layer already exists
+[2026-11-13T14:56:06.896Z] 6e25068ac781: Layer already exists
+[2026-11-13T14:56:06.896Z] 53c769b49ca0: Layer already exists
+[2026-11-13T14:56:06.896Z] d0e2898c5768: Layer already exists
+[2026-11-13T14:56:06.896Z] 42608b42cb5e: Layer already exists
+[2026-11-13T14:56:06.896Z] a3446cc6c821: Layer already exists
+[2026-11-13T14:56:06.896Z] 9e707aa6db47: Layer already exists
+[2026-11-13T14:56:06.896Z] a2738b08d711: Layer already exists
+[2026-11-13T14:56:06.896Z] 47a53288c3ef: Layer already exists
+[2026-11-13T14:56:06.896Z] 989e799e6349: Layer already exists
+[2026-11-13T14:56:08.758Z] ci-12: digest: sha256:aa370c62c0f6fe15169b54035fed9df2a0e26b5d07643399ab1207a20654c0ed size: 2615
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Verificar Kubernetes)
+[Pipeline] echo
+[2026-11-13T14:56:08.966Z] Comprobando el acceso a Minikube...
+[Pipeline] withCredentials
+[2026-11-13T14:56:09.033Z] Masking supported pattern matches of $KUBECONFIG
+[Pipeline] {
+[Pipeline] sh
+[2026-11-13T14:56:09.331Z] + kubectl get pods -n gestor-gastos
+[2026-11-13T14:56:09.331Z] NAME                                      READY   STATUS    RESTARTS   AGE
+[2026-11-13T14:56:09.331Z] gestor-gastos-backend-5578684977-wzz4p    1/1     Running   0          17m
+[2026-11-13T14:56:09.331Z] gestor-gastos-frontend-6696ff59f5-fdrdj   1/1     Running   0          17m
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Deploy Helm)
+[Pipeline] echo
+[2026-11-13T14:56:09.533Z] Desplegando las nuevas imagenes en Minikube...
+[Pipeline] withCredentials
+[2026-11-13T14:56:09.582Z] Masking supported pattern matches of $KUBECONFIG or $DOCKERHUB_TOKEN
+[Pipeline] {
+[Pipeline] sh
+[2026-11-13T14:56:09.879Z] + set -eu
+[2026-11-13T14:56:09.880Z] + helm upgrade --install gastos ./helm-chart --namespace gestor-gastos -f ./helm-chart/values-dev.yaml --set-string backend.image.repository=mariprieto01/gestor-gastos-backend --set-string backend.image.tag=ci-12 --set backend.image.pullPolicy=IfNotPresent --set-string frontend.image.repository=mariprieto01/gestor-gastos-frontend --set-string frontend.image.tag=ci-12 --set frontend.image.pullPolicy=IfNotPresent --wait --timeout 5m
+[2026-11-13T14:56:24.644Z] Release "gastos" has been upgraded. Happy Helming!
+[2026-11-13T14:56:24.644Z] NAME: gastos
+[2026-11-13T14:56:24.644Z] LAST DEPLOYED: Fri Nov 13 14:56:09 2026
+[2026-11-13T14:56:24.644Z] NAMESPACE: gestor-gastos
+[2026-11-13T14:56:24.644Z] STATUS: deployed
+[2026-11-13T14:56:24.644Z] REVISION: 2
+[2026-11-13T14:56:24.644Z] DESCRIPTION: Upgrade complete
+[2026-11-13T14:56:24.644Z] TEST SUITE: None
+[2026-11-13T14:56:24.644Z] + kubectl rollout status deployment/gestor-gastos-backend -n gestor-gastos --timeout=180s
+[2026-11-13T14:56:24.895Z] deployment "gestor-gastos-backend" successfully rolled out
+[2026-11-13T14:56:24.895Z] + kubectl rollout status deployment/gestor-gastos-frontend -n gestor-gastos --timeout=180s
+[2026-11-13T14:56:24.895Z] deployment "gestor-gastos-frontend" successfully rolled out
+[2026-11-13T14:56:24.895Z] + kubectl get pods -n gestor-gastos
+[2026-11-13T14:56:24.895Z] NAME                                      READY   STATUS    RESTARTS   AGE
+[2026-11-13T14:56:24.895Z] gestor-gastos-backend-5d8dc776d8-f9pwd    1/1     Running   0          13s
+[2026-11-13T14:56:24.895Z] gestor-gastos-frontend-86bd55f658-rbl9t   1/1     Running   0          14s
+[Pipeline] }
+[Pipeline] // withCredentials
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] stage
+[Pipeline] { (Declarative: Post Actions)
+[Pipeline] echo
+[2026-11-13T14:56:25.244Z] Verificaciones iniciales completadas correctamente.
+[Pipeline] }
+[Pipeline] // stage
+[Pipeline] }
+[Pipeline] // timestamps
+[Pipeline] }
+[Pipeline] // node
+[Pipeline] End of Pipeline
+Finished: SUCCESS
