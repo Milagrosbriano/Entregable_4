@@ -1,0 +1,3 @@
+﻿NAME                     READY   UP-TO-DATE   AVAILABLE   AGE   CONTAINERS   IMAGES                                     SELECTOR
+gestor-gastos-backend    1/1     1            1           84m   backend      mariprieto01/gestor-gastos-backend:ci-7    app=gestor-gastos-backend
+gestor-gastos-frontend   1/1     1            1           84m   frontend     mariprieto01/gestor-gastos-frontend:ci-7   app=gestor-gastos-frontend

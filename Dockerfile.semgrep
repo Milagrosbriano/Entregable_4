@@ -1,0 +1,12 @@
+FROM semgrep/semgrep:latest
+
+WORKDIR /src
+
+COPY gestor-gastos-backend/ ./gestor-gastos-backend/
+COPY gestor-gastos-frontend/ ./gestor-gastos-frontend/
+
+RUN semgrep scan \
+    --config p/python \
+    --config p/javascript \
+    --error \
+    gestor-gastos-backend gestor-gastos-frontend

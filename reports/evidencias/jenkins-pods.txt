@@ -1,0 +1,3 @@
+﻿NAME                                     READY   STATUS    RESTARTS   AGE
+gestor-gastos-backend-546db99fd-cmnb6    1/1     Running   0          2m26s
+gestor-gastos-frontend-fbd54b8cd-cs7tv   1/1     Running   0          2m28s

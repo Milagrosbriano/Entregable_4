@@ -1,0 +1,20 @@
+backend:
+  replicaCount: 1
+  image:
+    repository: gestor-gastos-backend
+    tag: v1
+    pullPolicy: Never
+
+frontend:
+  replicaCount: 1
+  image:
+    repository: gestor-gastos-frontend
+    tag: v1
+    pullPolicy: Never
+  service:
+    type: NodePort
+
+database:
+  persistence:
+    enabled: true
+    size: 1Gi

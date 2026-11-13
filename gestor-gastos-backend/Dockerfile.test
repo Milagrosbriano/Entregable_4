@@ -1,0 +1,12 @@
+FROM python:3.12-slim
+
+WORKDIR /app
+
+COPY gestor-gastos-backend/requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt pytest==8.3.5 httpx==0.27.2
+
+COPY gestor-gastos-backend/main.py .
+COPY gestor-gastos-backend/tests/ ./tests/
+
+RUN python -m pytest -q
