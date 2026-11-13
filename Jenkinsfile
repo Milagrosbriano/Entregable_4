@@ -133,7 +133,7 @@ pipeline {
                         variable: 'KUBECONFIG'
                     )
                 ]) {
-                    sh 'kubectl get pods -n gastos-helm'
+                    sh 'kubectl get pods -n gestor-gastos'
                 }
             }
         }
@@ -156,7 +156,7 @@ pipeline {
                         set -eu
 
                         helm upgrade --install gastos ./helm-chart \
-                            --namespace gastos-helm \
+                            --namespace gestor-gastos \
                             -f ./helm-chart/values-dev.yaml \
                             --set-string backend.image.repository="$DOCKERHUB_USER/gestor-gastos-backend" \
                             --set-string backend.image.tag="ci-$BUILD_NUMBER" \
@@ -167,10 +167,10 @@ pipeline {
                             --wait \
                             --timeout 5m
 
-                        kubectl rollout status deployment/gestor-gastos-backend -n gastos-helm --timeout=180s
-                        kubectl rollout status deployment/gestor-gastos-frontend -n gastos-helm --timeout=180s
+                        kubectl rollout status deployment/gestor-gastos-backend -n gestor-gastos --timeout=180s
+                        kubectl rollout status deployment/gestor-gastos-frontend -n gestor-gastos --timeout=180s
 
-                        kubectl get pods -n gastos-helm
+                        kubectl get pods -n gestor-gastos
                     '''
                 }
             }
