@@ -1,24 +1,19 @@
-apiVersion: kyverno.io/v1
-kind: ClusterPolicy
+apiVersion: policies.kyverno.io/v1
+kind: ValidatingPolicy
 metadata:
   name: impedir-root
 spec:
-  background: false
-  rules:
-    - name: validar-usuario
-      match:
-        any:
-          - resources:
-              kinds:
-                - Pod
-              namespaces:
-                - gestor-gastos
-      validate:
-        failureAction: Enforce
-        message: "Cada contenedor debe declarar runAsNonRoot true y runAsUser mayor a cero."
-        pattern:
-          spec:
-            containers:
-              - securityContext:
-                  runAsNonRoot: true
-                  runAsUser: ">0"
+  matchConstraints:
+    namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: gestor-gastos
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: [v1]
+        operations: [CREATE, UPDATE]
+        resources: [pods]
+  validationActions: [Deny]
+  validations:
+    - expression: >-
+        object.spec.containers.all(c, has(c.securityContext) && has(c.securityContext.runAsNonRoot) && c.securityContext.runAsNonRoot == true && has(c.securityContext.runAsUser) && c.securityContext.runAsUser > 0)
+      message: "Cada contenedor debe declarar runAsNonRoot true y runAsUser mayor a cero."

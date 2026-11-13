@@ -1,24 +1,19 @@
-apiVersion: kyverno.io/v1
-kind: ClusterPolicy
+apiVersion: policies.kyverno.io/v1
+kind: ValidatingPolicy
 metadata:
   name: prohibir-latest
 spec:
-  background: true
-  rules:
-    - name: validar-etiqueta-imagen
-      match:
-        any:
-          - resources:
-              kinds:
-                - Pod
-              namespaces:
-                - gestor-gastos
-      validate:
-        failureAction: Enforce
-        message: "La imagen debe tener una etiqueta explicita distinta de latest."
-        pattern:
-          spec:
-            containers:
-              - image: "?*:* & !*:latest"
-            "=(initContainers)":
-              - image: "?*:* & !*:latest"
+  matchConstraints:
+    namespaceSelector:
+      matchLabels:
+        kubernetes.io/metadata.name: gestor-gastos
+    resourceRules:
+      - apiGroups: [""]
+        apiVersions: [v1]
+        operations: [CREATE, UPDATE]
+        resources: [pods]
+  validationActions: [Deny]
+  validations:
+    - expression: >-
+        object.spec.containers.all(c, c.image.contains(':') && !c.image.endsWith(':latest'))
+      message: "La imagen debe tener una etiqueta explicita distinta de latest."
